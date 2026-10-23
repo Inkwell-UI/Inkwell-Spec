@@ -20,4 +20,5 @@ TypeScript, Zod schemas, generated JSON Schemas, protocol docs. Published to npm
 - **Flat node map keyed by Figma node ID;** visual IR and overlay are separate schemas sharing those IDs.
 - **Text is an array of style runs,** even while 0.1 allows only one run.
 - **No diagnostics in the IR.** Issues are derived, never stored.
+- **Menu JSON `swf` is relative to `Data/` including `Interface/` and `.swf`;** the runtime normalizes it for the engine. Contract entries record whether `required` is proven or only inferred.
 - **Breaking changes need a compatibility note** listing which consumer versions speak which spec version.
