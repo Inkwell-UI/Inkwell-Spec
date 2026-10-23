@@ -985,6 +985,9 @@
                                     },
                                     "name": {
                                       "type": "string"
+                                    },
+                                    "styleName": {
+                                      "type": "string"
                                     }
                                   },
                                   "required": [

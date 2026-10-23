@@ -21,6 +21,19 @@ describe("protocol", () => {
     expect(PluginMessage.safeParse({ type: "nope" }).success).toBe(false);
     expect(EditorMessage.safeParse({ type: "status", state: "weird" }).success).toBe(false);
   });
+  it("refuses a protocol 1 plugin", () => expect(ackHello({ ...hello, protocolVersion: 1 }, "1.0").error).toMatch(/Protocol mismatch.*Update the plugin/));
+  it("patch carries swfId and swf metadata; hashTree, resend, status, swfs are per swf", () => {
+    const m = { type: "patch", seq: 1, swfId: "1:1", swf: { id: "1:1", name: "Hud", stage: { width: 100, height: 50 } }, patch: { ops: [] } };
+    expect(PluginMessage.parse(m)).toEqual(m);
+    expect(PluginMessage.safeParse({ type: "patch", seq: 1, patch: { ops: [] } }).success).toBe(false);
+    expect(PluginMessage.safeParse({ type: "hashTree", nodeHashes: {} }).success).toBe(false);
+    expect(PluginMessage.parse({ type: "hashTree", swfId: "1:1", nodeHashes: {} })).toBeTruthy();
+    expect(PluginMessage.parse({ type: "swfs", frames: [{ id: "1:1", name: "Hud" }], loose: [{ id: "2:2", name: "Text" }] })).toBeTruthy();
+    expect(EditorMessage.parse({ type: "resend", swfId: "1:1", ids: ["1:2"] })).toBeTruthy();
+    expect(EditorMessage.safeParse({ type: "resend", ids: [] }).success).toBe(false);
+    expect(EditorMessage.parse({ type: "status", swfId: "1:1", state: "synced" })).toBeTruthy();
+    expect(EditorMessage.parse({ type: "status", state: "synced" })).toBeTruthy();
+  });
   it("hashNode ignores key order", () => {
     expect(hashNode({ a: 1, b: { c: 2, d: 3 } })).toBe(hashNode({ b: { d: 3, c: 2 }, a: 1 }));
     expect(hashNode({ a: 1 })).not.toBe(hashNode({ a: 2 }));

@@ -38,6 +38,9 @@
           "type": "string",
           "const": "resend"
         },
+        "swfId": {
+          "type": "string"
+        },
         "ids": {
           "type": "array",
           "items": {
@@ -47,6 +50,7 @@
       },
       "required": [
         "type",
+        "swfId",
         "ids"
       ],
       "additionalProperties": {}
@@ -81,6 +85,9 @@
         "type": {
           "type": "string",
           "const": "status"
+        },
+        "swfId": {
+          "type": "string"
         },
         "state": {
           "type": "string",

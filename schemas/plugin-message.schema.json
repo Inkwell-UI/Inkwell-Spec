@@ -45,6 +45,69 @@
           "minimum": -9007199254740991,
           "maximum": 9007199254740991
         },
+        "swfId": {
+          "type": "string"
+        },
+        "swf": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "stage": {
+              "type": "object",
+              "properties": {
+                "width": {
+                  "type": "number"
+                },
+                "height": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "width",
+                "height"
+              ],
+              "additionalProperties": {}
+            },
+            "target": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "hudWidget",
+                    "customMenu",
+                    "menuReplacement"
+                  ]
+                },
+                "contract": {
+                  "type": "string"
+                },
+                "base": {
+                  "type": "string",
+                  "enum": [
+                    "vanilla",
+                    "skyui"
+                  ]
+                }
+              },
+              "required": [
+                "kind"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "stage"
+          ],
+          "additionalProperties": {}
+        },
         "patch": {
           "type": "object",
           "properties": {
@@ -1031,6 +1094,9 @@
                                             },
                                             "name": {
                                               "type": "string"
+                                            },
+                                            "styleName": {
+                                              "type": "string"
                                             }
                                           },
                                           "required": [
@@ -1925,6 +1991,7 @@
       "required": [
         "type",
         "seq",
+        "swfId",
         "patch"
       ],
       "additionalProperties": {}
@@ -1935,6 +2002,9 @@
         "type": {
           "type": "string",
           "const": "hashTree"
+        },
+        "swfId": {
+          "type": "string"
         },
         "nodeHashes": {
           "type": "object",
@@ -1948,6 +2018,7 @@
       },
       "required": [
         "type",
+        "swfId",
         "nodeHashes"
       ],
       "additionalProperties": {}
@@ -1969,6 +2040,59 @@
       "required": [
         "type",
         "ids"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "swfs"
+        },
+        "frames": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ],
+            "additionalProperties": {}
+          }
+        },
+        "loose": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ],
+            "additionalProperties": {}
+          }
+        }
+      },
+      "required": [
+        "type",
+        "frames",
+        "loose"
       ],
       "additionalProperties": {}
     }

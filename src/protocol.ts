@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { NodeId } from "./ir.js";
+import { NodeId, Swf } from "./ir.js";
 import { Patch } from "./patch.js";
 import { SPEC_VERSION } from "./version.js";
 
 /** Bump on every handshake or message change. Editor and plugin must match exactly. */
-export const PROTOCOL_VERSION = 1;
+export const PROTOCOL_VERSION = 2;
 
 const msg = <T extends z.ZodRawShape>(s: T) => z.looseObject(s); // unknown keys survive
 
@@ -20,10 +20,20 @@ export const Hello = msg({
   specVersion: z.number().int(),
   fileKey: z.string().optional(),
 });
-export const PatchMsg = msg({ type: z.literal("patch"), seq: z.number().int(), patch: Patch, issues: z.array(SyncIssue).optional() });
-export const HashTree = msg({ type: z.literal("hashTree"), nodeHashes: z.record(NodeId, z.string()) });
+/** SWF metadata (no nodes). Sent with the first upsert of a root and whenever it changes. */
+export const SwfMeta = msg({ id: NodeId, name: z.string(), stage: Swf.shape.stage, target: Swf.shape.target.optional() });
+export type SwfMeta = z.infer<typeof SwfMeta>;
+/** One SWF per top-level Figma frame: `swfId` is that frame's node id. */
+export const PatchMsg = msg({
+  type: z.literal("patch"), seq: z.number().int(), swfId: NodeId, swf: SwfMeta.optional(),
+  patch: Patch, issues: z.array(SyncIssue).optional(),
+});
+export const HashTree = msg({ type: z.literal("hashTree"), swfId: NodeId, nodeHashes: z.record(NodeId, z.string()) });
+const LayerRef = msg({ id: NodeId, name: z.string() });
+/** Which top-level frames exist (SWFs) and which loose top-level layers belong to none. Sent on connect and when either changes. */
+export const Swfs = msg({ type: z.literal("swfs"), frames: z.array(LayerRef), loose: z.array(LayerRef) });
 export const Selection = msg({ type: z.literal("selection"), ids: z.array(NodeId) });
-export const PluginMessage = z.discriminatedUnion("type", [Hello, PatchMsg, HashTree, Selection]);
+export const PluginMessage = z.discriminatedUnion("type", [Hello, PatchMsg, HashTree, Selection, Swfs]);
 export type PluginMessage = z.infer<typeof PluginMessage>;
 
 // editor -> plugin
@@ -34,10 +44,11 @@ export const HelloAck = msg({
   protocolVersion: z.number().int(),
   error: z.string().optional(),
 });
-export const Resend = msg({ type: z.literal("resend"), ids: z.array(NodeId) });
+export const Resend = msg({ type: z.literal("resend"), swfId: NodeId, ids: z.array(NodeId) });
 export const ErrorMsg = msg({ type: z.literal("error"), code: z.string(), message: z.string(), nodeId: NodeId.optional() });
 export const Status = msg({
   type: z.literal("status"),
+  swfId: NodeId.optional(), // absent = the whole project
   state: z.enum(["synced", "compiling", "error"]),
   issues: z.array(SyncIssue).optional(),
 });

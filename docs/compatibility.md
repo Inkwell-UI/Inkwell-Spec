@@ -6,6 +6,14 @@ Every release of a consumer declares the spec version and protocol version it sp
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | 1 | `feat/foundations`, `feat/protocol` | `feat/swf-compiler` (0.1 work in progress) | `feat/plugin` | n/a | First IR. Text layout hints lived in `extra.text`. |
 | 2 | 1 | `feat/ir-text` | `feat/ir-text` and later | `feat/ir-text` and later | n/a | Text node gains `align`, `verticalAlign`, `lineHeight`, `letterSpacing`, `textFit`, `truncate`. |
+| 3 | 2 | `feat/swf-per-frame` | `feat/swf-per-frame` and later | `feat/swf-per-frame` and later | n/a | One SWF per top-level Figma frame; alias `FontRef.styleName`. |
+
+## 2 to 3 (IR and protocol change)
+
+- **What changed (IR):** an alias `FontRef` gains optional `styleName` (the Figma text style name) next to `name` (Figma `family/style`). Old documents parse unchanged.
+- **Migration:** `migrate()` runs 2->3, a no-op that only bumps `specVersion`.
+- **What changed (protocol 2):** `patch` carries `swfId` (the top-level frame's node id, one SWF per top-level frame) and optional `swf` metadata `{id, name, stage, target?}` (sent with the first upsert of a root and when it changes). `hashTree` and `resend` carry `swfId`; `status` carries optional `swfId` (absent = whole project). New plugin message `swfs` lists the existing top-level `frames` and the `loose` top-level layers that belong to no frame/SWF, so the editor can mark SWFs of deleted frames as orphaned (never delete them) and warn `unreachable-node`.
+- **Who must do what:** plugin and editor must both move to protocol 2 / spec 3; `ackHello` refuses any other combination. A project's SWFs live in `swfs/<name>/`; a v2 single-SWF project keeps opening (its one SWF stays as is).
 
 ## 1 to 2 (IR change)
 

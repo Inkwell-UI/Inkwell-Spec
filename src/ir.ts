@@ -72,7 +72,7 @@ export const Shape = obj({
 });
 
 export const FontRef = z.discriminatedUnion("kind", [
-  obj({ kind: z.literal("alias"), name: z.string() }),
+  obj({ kind: z.literal("alias"), name: z.string(), styleName: z.string().optional() }), // name = Figma family/style; styleName = Figma text style name
   obj({ kind: z.literal("embedded"), asset: z.string() }),
 ]);
 

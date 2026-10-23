@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { Swf, applyPatch, PatchError, migrate, SPEC_VERSION, type Node, type Patch } from "../src/index.js";
+import { Swf, FontRef, applyPatch, PatchError, migrate, SPEC_VERSION, type Node, type Patch } from "../src/index.js";
 import { render } from "../scripts/gen-schemas.js";
 
 const t = { x: 0, y: 0, width: 10, height: 10, rotation: 0 };
@@ -103,6 +103,18 @@ describe("migrate", () => {
   });
 });
 
+describe("2 to 3", () => {
+  it("is a no-op that keeps data and parses an alias with styleName", () => {
+    const n = { ...minimal(), specVersion: 2 };
+    const r = migrate(n);
+    expect(r.specVersion).toBe(3);
+    expect(r.nodes).toEqual(n.nodes);
+    const font = { kind: "alias", name: "Inter/Regular", styleName: "Everywhere / Medium / 18" };
+    expect(FontRef.parse(font)).toEqual(font);
+    expect(FontRef.parse({ kind: "alias", name: "$X" })).toEqual({ kind: "alias", name: "$X" });
+  });
+});
+
 describe("text fields", () => {
   const textNode = (extra?: unknown) => ({
     id: "1:4", name: "t", type: "text", parent: "1:2", children: [], transform: t, anchor, visible: true, opacity: 1, clipContent: false,
@@ -117,7 +129,7 @@ describe("text fields", () => {
   it("migrates v1 extra.text, keeping the rest of extra", () => {
     const old = v1({ text: { align: "right", verticalAlign: "center", lineHeight: 30, letterSpacing: 10, shrink: "fit", truncate: true, decoration: "underline" }, keep: 1 });
     const r = migrate(old);
-    expect(r.specVersion).toBe(2);
+    expect(r.specVersion).toBe(SPEC_VERSION);
     const n: any = parse(r).nodes["1:4"];
     expect(n).toMatchObject({ align: "right", verticalAlign: "center", lineHeight: { unit: "px", value: 30 }, letterSpacing: { unit: "percent", value: 10 }, textFit: "fit", truncate: true });
     expect(n.extra).toEqual({ text: { decoration: "underline" }, keep: 1 });
