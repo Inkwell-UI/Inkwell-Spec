@@ -253,6 +253,194 @@
                               "clipContent": {
                                 "type": "boolean"
                               },
+                              "fills": {
+                                "type": "array",
+                                "items": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "solid"
+                                        },
+                                        "color": {
+                                          "type": "object",
+                                          "properties": {
+                                            "r": {
+                                              "type": "number"
+                                            },
+                                            "g": {
+                                              "type": "number"
+                                            },
+                                            "b": {
+                                              "type": "number"
+                                            },
+                                            "a": {
+                                              "type": "number"
+                                            }
+                                          },
+                                          "required": [
+                                            "r",
+                                            "g",
+                                            "b"
+                                          ],
+                                          "additionalProperties": {}
+                                        },
+                                        "opacity": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "color"
+                                      ],
+                                      "additionalProperties": {}
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "linear"
+                                        },
+                                        "stops": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "position": {
+                                                "type": "number"
+                                              },
+                                              "color": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "r": {
+                                                    "type": "number"
+                                                  },
+                                                  "g": {
+                                                    "type": "number"
+                                                  },
+                                                  "b": {
+                                                    "type": "number"
+                                                  },
+                                                  "a": {
+                                                    "type": "number"
+                                                  }
+                                                },
+                                                "required": [
+                                                  "r",
+                                                  "g",
+                                                  "b"
+                                                ],
+                                                "additionalProperties": {}
+                                              }
+                                            },
+                                            "required": [
+                                              "position",
+                                              "color"
+                                            ],
+                                            "additionalProperties": {}
+                                          }
+                                        },
+                                        "transform": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "number"
+                                          }
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "stops"
+                                      ],
+                                      "additionalProperties": {}
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "radial"
+                                        },
+                                        "stops": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "position": {
+                                                "type": "number"
+                                              },
+                                              "color": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "r": {
+                                                    "type": "number"
+                                                  },
+                                                  "g": {
+                                                    "type": "number"
+                                                  },
+                                                  "b": {
+                                                    "type": "number"
+                                                  },
+                                                  "a": {
+                                                    "type": "number"
+                                                  }
+                                                },
+                                                "required": [
+                                                  "r",
+                                                  "g",
+                                                  "b"
+                                                ],
+                                                "additionalProperties": {}
+                                              }
+                                            },
+                                            "required": [
+                                              "position",
+                                              "color"
+                                            ],
+                                            "additionalProperties": {}
+                                          }
+                                        },
+                                        "transform": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "number"
+                                          }
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "stops"
+                                      ],
+                                      "additionalProperties": {}
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "image"
+                                        },
+                                        "asset": {
+                                          "type": "string"
+                                        },
+                                        "scaleMode": {
+                                          "type": "string"
+                                        },
+                                        "opacity": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "asset"
+                                      ],
+                                      "additionalProperties": {}
+                                    }
+                                  ]
+                                }
+                              },
                               "autoLayout": {
                                 "type": "object",
                                 "properties": {
@@ -702,6 +890,9 @@
                                         },
                                         "scaleMode": {
                                           "type": "string"
+                                        },
+                                        "opacity": {
+                                          "type": "number"
                                         }
                                       },
                                       "required": [
@@ -890,6 +1081,9 @@
                                             },
                                             "scaleMode": {
                                               "type": "string"
+                                            },
+                                            "opacity": {
+                                              "type": "number"
                                             }
                                           },
                                           "required": [
@@ -1299,6 +1493,9 @@
                                             },
                                             "scaleMode": {
                                               "type": "string"
+                                            },
+                                            "opacity": {
+                                              "type": "number"
                                             }
                                           },
                                           "required": [
@@ -1577,6 +1774,9 @@
                                   "crop",
                                   "tile"
                                 ]
+                              },
+                              "fillOpacity": {
+                                "type": "number"
                               }
                             },
                             "required": [
@@ -2093,6 +2293,29 @@
         "type",
         "frames",
         "loose"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "asset"
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "data": {
+          "type": "string",
+          "maxLength": 67108864
+        }
+      },
+      "required": [
+        "type",
+        "hash",
+        "data"
       ],
       "additionalProperties": {}
     }

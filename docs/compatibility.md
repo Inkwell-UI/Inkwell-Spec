@@ -7,6 +7,14 @@ Every release of a consumer declares the spec version and protocol version it sp
 | 1 | 1 | `feat/foundations`, `feat/protocol` | `feat/swf-compiler` (0.1 work in progress) | `feat/plugin` | n/a | First IR. Text layout hints lived in `extra.text`. |
 | 2 | 1 | `feat/ir-text` | `feat/ir-text` and later | `feat/ir-text` and later | n/a | Text node gains `align`, `verticalAlign`, `lineHeight`, `letterSpacing`, `textFit`, `truncate`. |
 | 3 | 2 | `feat/swf-per-frame` | `feat/swf-per-frame` and later | `feat/swf-per-frame` and later | n/a | One SWF per top-level Figma frame; alias `FontRef.styleName`. |
+| 4 | 3 | `feat/images` | `feat/images` and later | `feat/images` and later | n/a | Images: image fill `opacity`, Frame `fills`, Image `fillOpacity`; `asset` / `needAssets` messages. |
+
+## 3 to 4 (IR and protocol change: images)
+
+- **What changed (IR):** the image `Fill` gains optional `opacity`; `Frame` gains optional `fills` (background fills; the editor compiles image fills there); `Image` gains optional `fillOpacity` (the image paint's opacity, separate from the node's `opacity`). New helper `imageHashes(node)` lists the image hashes a node references. Old documents parse unchanged.
+- **Migration:** `migrate()` runs 3->4, a no-op that only bumps `specVersion`.
+- **What changed (protocol 3):** new editor message `needAssets {hashes}` (hashes an IR references that the editor lacks) and plugin message `asset {hash, data}` (one base64 PNG per hash, sent only when asked and at most once per hash per connection). `AssetHash` is 40 lower-case hex digits (Figma's SHA-1 image hash) because it becomes a file name.
+- **Who must do what:** plugin and editor both move to protocol 3 / spec 4; `ackHello` refuses any other combination, so a protocol 2 plugin gets a clear "update the plugin" message instead of silently missing images. Projects saved at spec 3 keep opening (migration). A project without any assets still compiles; images whose bytes never arrived are linted (`image-missing-asset`).
 
 ## 2 to 3 (IR and protocol change)
 

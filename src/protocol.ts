@@ -4,7 +4,7 @@ import { Patch } from "./patch.js";
 import { SPEC_VERSION } from "./version.js";
 
 /** Bump on every handshake or message change. Editor and plugin must match exactly. */
-export const PROTOCOL_VERSION = 2;
+export const PROTOCOL_VERSION = 3;
 
 const msg = <T extends z.ZodRawShape>(s: T) => z.looseObject(s); // unknown keys survive
 
@@ -33,7 +33,14 @@ const LayerRef = msg({ id: NodeId, name: z.string() });
 /** Which top-level frames exist (SWFs) and which loose top-level layers belong to none. Sent on connect and when either changes. */
 export const Swfs = msg({ type: z.literal("swfs"), frames: z.array(LayerRef), loose: z.array(LayerRef) });
 export const Selection = msg({ type: z.literal("selection"), ids: z.array(NodeId) });
-export const PluginMessage = z.discriminatedUnion("type", [Hello, PatchMsg, HashTree, Selection, Swfs]);
+/** Figma image hash (40 hex digits, SHA-1). Validated because it becomes a file name (assets/<hash>.png, textures/.../<hash>.dds). */
+export const AssetHash = z.string().regex(/^[0-9a-f]{40}$/, "asset hash must be 40 lower-case hex digits");
+/**
+ * Protocol 3: one image, sent only when the editor asked for it (`needAssets`) and at most once per hash per connection.
+ * `data` is a base64 PNG (the plugin re-encodes other formats); the editor decodes and checks it before storing it.
+ */
+export const AssetMsg = msg({ type: z.literal("asset"), hash: AssetHash, data: z.string().max(64 * 1024 * 1024) });
+export const PluginMessage = z.discriminatedUnion("type", [Hello, PatchMsg, HashTree, Selection, Swfs, AssetMsg]);
 export type PluginMessage = z.infer<typeof PluginMessage>;
 
 // editor -> plugin
@@ -52,7 +59,9 @@ export const Status = msg({
   state: z.enum(["synced", "compiling", "error"]),
   issues: z.array(SyncIssue).optional(),
 });
-export const EditorMessage = z.discriminatedUnion("type", [HelloAck, Resend, ErrorMsg, Status]);
+/** Protocol 3: image hashes an IR references that the editor does not have; the plugin answers with one `asset` message each. */
+export const NeedAssets = msg({ type: z.literal("needAssets"), hashes: z.array(AssetHash) });
+export const EditorMessage = z.discriminatedUnion("type", [HelloAck, Resend, ErrorMsg, Status, NeedAssets]);
 export type EditorMessage = z.infer<typeof EditorMessage>;
 
 /** Editor side: answer a hello. Exact protocol match required; a spec mismatch is also refused. */

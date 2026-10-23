@@ -1,5 +1,5 @@
 /** Bump on every IR/overlay change and add a Migration from the previous version. */
-export const SPEC_VERSION = 3;
+export const SPEC_VERSION = 4;
 
 export type Migration = { from: number; to: number; fn: (doc: any) => any };
 
@@ -32,8 +32,10 @@ export function textLayoutToFields(doc: any): any {
 /** 2 -> 3: alias FontRef gains optional `styleName`; protocol is per SWF. Nothing to rewrite in stored documents. */
 export const noop = (doc: any): any => doc;
 
+/** 3 -> 4 (images): image Fill gains `opacity`, Frame gains optional `fills`, Image gains `fillOpacity`. All optional: nothing to rewrite. */
+
 /** Ordered chain. */
-export const MIGRATIONS: Migration[] = [{ from: 1, to: 2, fn: textLayoutToFields }, { from: 2, to: 3, fn: noop }];
+export const MIGRATIONS: Migration[] = [{ from: 1, to: 2, fn: textLayoutToFields }, { from: 2, to: 3, fn: noop }, { from: 3, to: 4, fn: noop }];
 
 /** Runs migrations in order until doc.specVersion reaches target. Throws on newer or unreachable versions. */
 export function migrate(

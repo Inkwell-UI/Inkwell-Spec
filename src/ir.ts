@@ -16,7 +16,8 @@ export const Fill = z.discriminatedUnion("type", [
   obj({ type: z.literal("solid"), color: Color, opacity: z.number().optional() }),
   obj({ type: z.literal("linear"), stops: z.array(Stop), transform: z.array(z.number()).optional() }),
   obj({ type: z.literal("radial"), stops: z.array(Stop), transform: z.array(z.number()).optional() }),
-  obj({ type: z.literal("image"), asset: z.string(), scaleMode: z.string().optional() }),
+  // asset = Figma image hash (the key of the project's assets/<hash>.png); scaleMode = fill | fit | crop | tile (Figma's, lower case)
+  obj({ type: z.literal("image"), asset: z.string(), scaleMode: z.string().optional(), opacity: z.number().optional() }),
 ]);
 
 export const Stroke = obj({
@@ -55,6 +56,7 @@ export const Frame = obj({
   ...base,
   type: z.literal("frame"),
   clipContent: z.boolean(),
+  fills: z.array(Fill).optional(), // background fills (spec 4); compilers may support only some fill types here
   autoLayout: obj({
     mode: z.enum(["horizontal", "vertical"]),
     spacing: z.number(),
@@ -109,6 +111,7 @@ export const Image = obj({
   type: z.literal("image"),
   asset: z.string(),
   scaleMode: z.enum(["fill", "fit", "crop", "tile"]),
+  fillOpacity: z.number().optional(), // the image paint's own opacity (spec 4), separate from the node's `opacity`
 });
 
 export const Instance = obj({
@@ -127,6 +130,12 @@ export const Component = obj({
 
 export const Node = z.discriminatedUnion("type", [Frame, Shape, Text, Image, Instance, Component]);
 export type Node = z.infer<typeof Node>;
+
+/** Image hashes a node references (Image nodes and image fills of shapes and frames). The one place that knows where they live. */
+export function imageHashes(n: Node): string[] {
+  const fills = n.type === "shape" || n.type === "frame" ? n.fills ?? [] : [];
+  return [...(n.type === "image" ? [n.asset] : []), ...fills.flatMap((f) => (f.type === "image" ? [f.asset] : []))];
+}
 
 export const Asset = obj({ kind: z.enum(["image", "font"]), hash: z.string(), name: z.string().optional() });
 export const Theme = obj({ name: z.string(), modes: z.array(z.string()), variables: z.record(z.string(), z.unknown()).optional() });

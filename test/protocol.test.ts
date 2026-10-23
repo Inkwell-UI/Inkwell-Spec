@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { ackHello, hashNode, PluginMessage, EditorMessage, PROTOCOL_VERSION, SPEC_VERSION } from "../src/index.js";
 
+const H = "0123456789abcdef0123456789abcdef01234567";
+
 const hello = { type: "hello" as const, pluginVersion: "0.1.0", protocolVersion: PROTOCOL_VERSION, specVersion: SPEC_VERSION };
 
 describe("protocol", () => {
@@ -33,6 +35,16 @@ describe("protocol", () => {
     expect(EditorMessage.safeParse({ type: "resend", ids: [] }).success).toBe(false);
     expect(EditorMessage.parse({ type: "status", swfId: "1:1", state: "synced" })).toBeTruthy();
     expect(EditorMessage.parse({ type: "status", state: "synced" })).toBeTruthy();
+  });
+  it("refuses a protocol 2 plugin (no asset messages)", () => expect(ackHello({ ...hello, protocolVersion: 2 }, "1.0").error).toMatch(/Update the plugin/));
+  it("protocol 3: asset and needAssets carry validated hashes", () => {
+    expect(PluginMessage.parse({ type: "asset", hash: H, data: "iVBORw0KGgo=" })).toBeTruthy();
+    expect(EditorMessage.parse({ type: "needAssets", hashes: [H] })).toBeTruthy();
+    for (const bad of ["../../evil", H.toUpperCase(), H.slice(1), `${H}/x`]) {
+      expect(PluginMessage.safeParse({ type: "asset", hash: bad, data: "" }).success).toBe(false);
+      expect(EditorMessage.safeParse({ type: "needAssets", hashes: [bad] }).success).toBe(false);
+    }
+    expect(PluginMessage.safeParse({ type: "asset", hash: H }).success).toBe(false);
   });
   it("hashNode ignores key order", () => {
     expect(hashNode({ a: 1, b: { c: 2, d: 3 } })).toBe(hashNode({ b: { d: 3, c: 2 }, a: 1 }));

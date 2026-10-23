@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { Swf, FontRef, applyPatch, PatchError, migrate, SPEC_VERSION, type Node, type Patch } from "../src/index.js";
+import { Swf, FontRef, applyPatch, PatchError, migrate, hashNode, imageHashes, SPEC_VERSION, type Node, type Patch } from "../src/index.js";
 import { render } from "../scripts/gen-schemas.js";
 
 const t = { x: 0, y: 0, width: 10, height: 10, rotation: 0 };
@@ -106,7 +106,7 @@ describe("migrate", () => {
 describe("2 to 3", () => {
   it("is a no-op that keeps data and parses an alias with styleName", () => {
     const n = { ...minimal(), specVersion: 2 };
-    const r = migrate(n);
+    const r = migrate(n, { target: 3 });
     expect(r.specVersion).toBe(3);
     expect(r.nodes).toEqual(n.nodes);
     const font = { kind: "alias", name: "Inter/Regular", styleName: "Everywhere / Medium / 18" };
@@ -145,5 +145,42 @@ describe("generated schemas", () => {
     for (const [f, text] of Object.entries(render())) {
       expect(readFileSync(new URL(`../schemas/${f}`, import.meta.url), "utf8")).toBe(text);
     }
+  });
+});
+
+describe("3 to 4 (images)", () => {
+  const img = { type: "image", asset: "a".repeat(40), scaleMode: "fit", opacity: 0.5 };
+  const doc = () => {
+    const d: any = minimal();
+    d.nodes["1:2"] = { ...d.nodes["1:2"], fills: [{ type: "solid", color: { r: 1, g: 0, b: 0 } }, img] };
+    d.nodes["1:4"] = { ...frame("1:4", "1:1"), type: "image", asset: "b".repeat(40), scaleMode: "fill", fillOpacity: 0.25 };
+    d.nodes["1:5"] = { ...frame("1:5", "1:1"), type: "shape", paths: [], fills: [img], strokes: [] };
+    d.nodes["1:1"].children.push("1:4", "1:5");
+    return d;
+  };
+  it("parses image fills (with opacity) on frames and shapes, and Image fillOpacity", () => {
+    const s = Swf.parse(doc());
+    expect(s.nodes["1:2"]).toMatchObject({ fills: [{ type: "solid" }, img] });
+    expect(s.nodes["1:4"]).toMatchObject({ fillOpacity: 0.25 });
+  });
+  it("a spec 3 document migrates unchanged", () => {
+    const old = { ...minimal(), specVersion: 3 };
+    expect(migrate(old)).toEqual({ ...old, specVersion: 4 });
+  });
+  it("imageHashes finds Image nodes and image fills", () => {
+    const s = Swf.parse(doc());
+    expect(Object.values(s.nodes).flatMap(imageHashes).sort()).toEqual(["a".repeat(40), "a".repeat(40), "b".repeat(40)]);
+  });
+  it("hashNode covers image fills: hash and scale mode changes change the node hash", () => {
+    const n = doc().nodes["1:2"];
+    const h = hashNode(n);
+    expect(hashNode({ ...n, fills: [n.fills[0], { ...img, asset: "c".repeat(40) }] })).not.toBe(h);
+    expect(hashNode({ ...n, fills: [n.fills[0], { ...img, scaleMode: "fill" }] })).not.toBe(h);
+  });
+  it("an upsert with an image node is atomic with a failing op", () => {
+    const s = Swf.parse(doc());
+    const node = { ...s.nodes["1:4"]!, asset: "d".repeat(40) } as Node;
+    expect(() => applyPatch(s, { ops: [{ op: "upsert", node }, { op: "move", id: "9:9", parent: "1:1" }] })).toThrow(PatchError);
+    expect((s.nodes["1:4"] as { asset: string }).asset).toBe("b".repeat(40));
   });
 });
