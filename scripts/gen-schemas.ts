@@ -1,9 +1,9 @@
 // Generates schemas/*.json from the Zod types. Generated files: never hand-edit.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { z } from "zod";
-import { Swf, Overlay, Patch } from "../src/index.js";
+import { Swf, Overlay, Patch, PluginMessage, EditorMessage } from "../src/index.js";
 
-const schemas = { swf: Swf, overlay: Overlay, patch: Patch };
+const schemas = { swf: Swf, overlay: Overlay, patch: Patch, "plugin-message": PluginMessage, "editor-message": EditorMessage };
 
 export function render(): Record<string, string> {
   return Object.fromEntries(
