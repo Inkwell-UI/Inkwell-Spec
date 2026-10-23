@@ -1,0 +1,1759 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "ops": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "type": "string",
+                "const": "upsert"
+              },
+              "node": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "parent": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "children": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "transform": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          },
+                          "width": {
+                            "type": "number"
+                          },
+                          "height": {
+                            "type": "number"
+                          },
+                          "rotation": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y",
+                          "width",
+                          "height",
+                          "rotation"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "anchor": {
+                        "type": "object",
+                        "properties": {
+                          "h": {
+                            "type": "string",
+                            "enum": [
+                              "left",
+                              "right",
+                              "center",
+                              "stretch",
+                              "scale"
+                            ]
+                          },
+                          "v": {
+                            "type": "string",
+                            "enum": [
+                              "top",
+                              "bottom",
+                              "center",
+                              "stretch",
+                              "scale"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "h",
+                          "v"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "visible": {
+                        "type": "boolean"
+                      },
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "blend": {
+                        "type": "string"
+                      },
+                      "mask": {
+                        "type": [
+                          "boolean",
+                          "string"
+                        ]
+                      },
+                      "bindings": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "collection": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id"
+                          ],
+                          "additionalProperties": {}
+                        }
+                      },
+                      "extra": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "frame"
+                      },
+                      "clipContent": {
+                        "type": "boolean"
+                      },
+                      "autoLayout": {
+                        "type": "object",
+                        "properties": {
+                          "mode": {
+                            "type": "string",
+                            "enum": [
+                              "horizontal",
+                              "vertical"
+                            ]
+                          },
+                          "spacing": {
+                            "type": "number"
+                          },
+                          "padding": {
+                            "minItems": 4,
+                            "maxItems": 4,
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          "dynamic": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "mode",
+                          "spacing",
+                          "padding"
+                        ],
+                        "additionalProperties": {}
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "parent",
+                      "children",
+                      "transform",
+                      "anchor",
+                      "visible",
+                      "opacity",
+                      "type",
+                      "clipContent"
+                    ],
+                    "additionalProperties": {}
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "parent": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "children": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "transform": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          },
+                          "width": {
+                            "type": "number"
+                          },
+                          "height": {
+                            "type": "number"
+                          },
+                          "rotation": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y",
+                          "width",
+                          "height",
+                          "rotation"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "anchor": {
+                        "type": "object",
+                        "properties": {
+                          "h": {
+                            "type": "string",
+                            "enum": [
+                              "left",
+                              "right",
+                              "center",
+                              "stretch",
+                              "scale"
+                            ]
+                          },
+                          "v": {
+                            "type": "string",
+                            "enum": [
+                              "top",
+                              "bottom",
+                              "center",
+                              "stretch",
+                              "scale"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "h",
+                          "v"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "visible": {
+                        "type": "boolean"
+                      },
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "blend": {
+                        "type": "string"
+                      },
+                      "mask": {
+                        "type": [
+                          "boolean",
+                          "string"
+                        ]
+                      },
+                      "bindings": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "collection": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id"
+                          ],
+                          "additionalProperties": {}
+                        }
+                      },
+                      "extra": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "shape"
+                      },
+                      "paths": {
+                        "type": "array",
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "op": {
+                                    "type": "string",
+                                    "const": "M"
+                                  },
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "op",
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": {}
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "op": {
+                                    "type": "string",
+                                    "const": "L"
+                                  },
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "op",
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": {}
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "op": {
+                                    "type": "string",
+                                    "const": "C"
+                                  },
+                                  "x1": {
+                                    "type": "number"
+                                  },
+                                  "y1": {
+                                    "type": "number"
+                                  },
+                                  "x2": {
+                                    "type": "number"
+                                  },
+                                  "y2": {
+                                    "type": "number"
+                                  },
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "op",
+                                  "x1",
+                                  "y1",
+                                  "x2",
+                                  "y2",
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": {}
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "op": {
+                                    "type": "string",
+                                    "const": "Z"
+                                  }
+                                },
+                                "required": [
+                                  "op"
+                                ],
+                                "additionalProperties": {}
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "fills": {
+                        "type": "array",
+                        "items": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "solid"
+                                },
+                                "color": {
+                                  "type": "object",
+                                  "properties": {
+                                    "r": {
+                                      "type": "number"
+                                    },
+                                    "g": {
+                                      "type": "number"
+                                    },
+                                    "b": {
+                                      "type": "number"
+                                    },
+                                    "a": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "r",
+                                    "g",
+                                    "b"
+                                  ],
+                                  "additionalProperties": {}
+                                },
+                                "opacity": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "color"
+                              ],
+                              "additionalProperties": {}
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "linear"
+                                },
+                                "stops": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "position": {
+                                        "type": "number"
+                                      },
+                                      "color": {
+                                        "type": "object",
+                                        "properties": {
+                                          "r": {
+                                            "type": "number"
+                                          },
+                                          "g": {
+                                            "type": "number"
+                                          },
+                                          "b": {
+                                            "type": "number"
+                                          },
+                                          "a": {
+                                            "type": "number"
+                                          }
+                                        },
+                                        "required": [
+                                          "r",
+                                          "g",
+                                          "b"
+                                        ],
+                                        "additionalProperties": {}
+                                      }
+                                    },
+                                    "required": [
+                                      "position",
+                                      "color"
+                                    ],
+                                    "additionalProperties": {}
+                                  }
+                                },
+                                "transform": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "stops"
+                              ],
+                              "additionalProperties": {}
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "radial"
+                                },
+                                "stops": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "position": {
+                                        "type": "number"
+                                      },
+                                      "color": {
+                                        "type": "object",
+                                        "properties": {
+                                          "r": {
+                                            "type": "number"
+                                          },
+                                          "g": {
+                                            "type": "number"
+                                          },
+                                          "b": {
+                                            "type": "number"
+                                          },
+                                          "a": {
+                                            "type": "number"
+                                          }
+                                        },
+                                        "required": [
+                                          "r",
+                                          "g",
+                                          "b"
+                                        ],
+                                        "additionalProperties": {}
+                                      }
+                                    },
+                                    "required": [
+                                      "position",
+                                      "color"
+                                    ],
+                                    "additionalProperties": {}
+                                  }
+                                },
+                                "transform": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "stops"
+                              ],
+                              "additionalProperties": {}
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "image"
+                                },
+                                "asset": {
+                                  "type": "string"
+                                },
+                                "scaleMode": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "asset"
+                              ],
+                              "additionalProperties": {}
+                            }
+                          ]
+                        }
+                      },
+                      "strokes": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "fill": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "solid"
+                                    },
+                                    "color": {
+                                      "type": "object",
+                                      "properties": {
+                                        "r": {
+                                          "type": "number"
+                                        },
+                                        "g": {
+                                          "type": "number"
+                                        },
+                                        "b": {
+                                          "type": "number"
+                                        },
+                                        "a": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "r",
+                                        "g",
+                                        "b"
+                                      ],
+                                      "additionalProperties": {}
+                                    },
+                                    "opacity": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "color"
+                                  ],
+                                  "additionalProperties": {}
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "linear"
+                                    },
+                                    "stops": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "position": {
+                                            "type": "number"
+                                          },
+                                          "color": {
+                                            "type": "object",
+                                            "properties": {
+                                              "r": {
+                                                "type": "number"
+                                              },
+                                              "g": {
+                                                "type": "number"
+                                              },
+                                              "b": {
+                                                "type": "number"
+                                              },
+                                              "a": {
+                                                "type": "number"
+                                              }
+                                            },
+                                            "required": [
+                                              "r",
+                                              "g",
+                                              "b"
+                                            ],
+                                            "additionalProperties": {}
+                                          }
+                                        },
+                                        "required": [
+                                          "position",
+                                          "color"
+                                        ],
+                                        "additionalProperties": {}
+                                      }
+                                    },
+                                    "transform": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "stops"
+                                  ],
+                                  "additionalProperties": {}
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "radial"
+                                    },
+                                    "stops": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "position": {
+                                            "type": "number"
+                                          },
+                                          "color": {
+                                            "type": "object",
+                                            "properties": {
+                                              "r": {
+                                                "type": "number"
+                                              },
+                                              "g": {
+                                                "type": "number"
+                                              },
+                                              "b": {
+                                                "type": "number"
+                                              },
+                                              "a": {
+                                                "type": "number"
+                                              }
+                                            },
+                                            "required": [
+                                              "r",
+                                              "g",
+                                              "b"
+                                            ],
+                                            "additionalProperties": {}
+                                          }
+                                        },
+                                        "required": [
+                                          "position",
+                                          "color"
+                                        ],
+                                        "additionalProperties": {}
+                                      }
+                                    },
+                                    "transform": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "stops"
+                                  ],
+                                  "additionalProperties": {}
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "image"
+                                    },
+                                    "asset": {
+                                      "type": "string"
+                                    },
+                                    "scaleMode": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "asset"
+                                  ],
+                                  "additionalProperties": {}
+                                }
+                              ]
+                            },
+                            "weight": {
+                              "type": "number"
+                            },
+                            "alignment": {
+                              "type": "string",
+                              "enum": [
+                                "inside",
+                                "center",
+                                "outside"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "fill",
+                            "weight",
+                            "alignment"
+                          ],
+                          "additionalProperties": {}
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "parent",
+                      "children",
+                      "transform",
+                      "anchor",
+                      "visible",
+                      "opacity",
+                      "type",
+                      "paths",
+                      "fills",
+                      "strokes"
+                    ],
+                    "additionalProperties": {}
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "parent": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "children": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "transform": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          },
+                          "width": {
+                            "type": "number"
+                          },
+                          "height": {
+                            "type": "number"
+                          },
+                          "rotation": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y",
+                          "width",
+                          "height",
+                          "rotation"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "anchor": {
+                        "type": "object",
+                        "properties": {
+                          "h": {
+                            "type": "string",
+                            "enum": [
+                              "left",
+                              "right",
+                              "center",
+                              "stretch",
+                              "scale"
+                            ]
+                          },
+                          "v": {
+                            "type": "string",
+                            "enum": [
+                              "top",
+                              "bottom",
+                              "center",
+                              "stretch",
+                              "scale"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "h",
+                          "v"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "visible": {
+                        "type": "boolean"
+                      },
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "blend": {
+                        "type": "string"
+                      },
+                      "mask": {
+                        "type": [
+                          "boolean",
+                          "string"
+                        ]
+                      },
+                      "bindings": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "collection": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id"
+                          ],
+                          "additionalProperties": {}
+                        }
+                      },
+                      "extra": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "text"
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "runs": {
+                        "minItems": 1,
+                        "maxItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "start": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "end": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "font": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "alias"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind",
+                                    "name"
+                                  ],
+                                  "additionalProperties": {}
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "embedded"
+                                    },
+                                    "asset": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind",
+                                    "asset"
+                                  ],
+                                  "additionalProperties": {}
+                                }
+                              ]
+                            },
+                            "size": {
+                              "type": "number"
+                            },
+                            "fill": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "solid"
+                                    },
+                                    "color": {
+                                      "type": "object",
+                                      "properties": {
+                                        "r": {
+                                          "type": "number"
+                                        },
+                                        "g": {
+                                          "type": "number"
+                                        },
+                                        "b": {
+                                          "type": "number"
+                                        },
+                                        "a": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "r",
+                                        "g",
+                                        "b"
+                                      ],
+                                      "additionalProperties": {}
+                                    },
+                                    "opacity": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "color"
+                                  ],
+                                  "additionalProperties": {}
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "linear"
+                                    },
+                                    "stops": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "position": {
+                                            "type": "number"
+                                          },
+                                          "color": {
+                                            "type": "object",
+                                            "properties": {
+                                              "r": {
+                                                "type": "number"
+                                              },
+                                              "g": {
+                                                "type": "number"
+                                              },
+                                              "b": {
+                                                "type": "number"
+                                              },
+                                              "a": {
+                                                "type": "number"
+                                              }
+                                            },
+                                            "required": [
+                                              "r",
+                                              "g",
+                                              "b"
+                                            ],
+                                            "additionalProperties": {}
+                                          }
+                                        },
+                                        "required": [
+                                          "position",
+                                          "color"
+                                        ],
+                                        "additionalProperties": {}
+                                      }
+                                    },
+                                    "transform": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "stops"
+                                  ],
+                                  "additionalProperties": {}
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "radial"
+                                    },
+                                    "stops": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "position": {
+                                            "type": "number"
+                                          },
+                                          "color": {
+                                            "type": "object",
+                                            "properties": {
+                                              "r": {
+                                                "type": "number"
+                                              },
+                                              "g": {
+                                                "type": "number"
+                                              },
+                                              "b": {
+                                                "type": "number"
+                                              },
+                                              "a": {
+                                                "type": "number"
+                                              }
+                                            },
+                                            "required": [
+                                              "r",
+                                              "g",
+                                              "b"
+                                            ],
+                                            "additionalProperties": {}
+                                          }
+                                        },
+                                        "required": [
+                                          "position",
+                                          "color"
+                                        ],
+                                        "additionalProperties": {}
+                                      }
+                                    },
+                                    "transform": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "stops"
+                                  ],
+                                  "additionalProperties": {}
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "image"
+                                    },
+                                    "asset": {
+                                      "type": "string"
+                                    },
+                                    "scaleMode": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "asset"
+                                  ],
+                                  "additionalProperties": {}
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "start",
+                            "end",
+                            "font",
+                            "size"
+                          ],
+                          "additionalProperties": {}
+                        }
+                      },
+                      "sizing": {
+                        "type": "string",
+                        "enum": [
+                          "fixed",
+                          "autoWidth",
+                          "autoHeight"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "parent",
+                      "children",
+                      "transform",
+                      "anchor",
+                      "visible",
+                      "opacity",
+                      "type",
+                      "content",
+                      "runs",
+                      "sizing"
+                    ],
+                    "additionalProperties": {}
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "parent": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "children": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "transform": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          },
+                          "width": {
+                            "type": "number"
+                          },
+                          "height": {
+                            "type": "number"
+                          },
+                          "rotation": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y",
+                          "width",
+                          "height",
+                          "rotation"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "anchor": {
+                        "type": "object",
+                        "properties": {
+                          "h": {
+                            "type": "string",
+                            "enum": [
+                              "left",
+                              "right",
+                              "center",
+                              "stretch",
+                              "scale"
+                            ]
+                          },
+                          "v": {
+                            "type": "string",
+                            "enum": [
+                              "top",
+                              "bottom",
+                              "center",
+                              "stretch",
+                              "scale"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "h",
+                          "v"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "visible": {
+                        "type": "boolean"
+                      },
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "blend": {
+                        "type": "string"
+                      },
+                      "mask": {
+                        "type": [
+                          "boolean",
+                          "string"
+                        ]
+                      },
+                      "bindings": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "collection": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id"
+                          ],
+                          "additionalProperties": {}
+                        }
+                      },
+                      "extra": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "image"
+                      },
+                      "asset": {
+                        "type": "string"
+                      },
+                      "scaleMode": {
+                        "type": "string",
+                        "enum": [
+                          "fill",
+                          "fit",
+                          "crop",
+                          "tile"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "parent",
+                      "children",
+                      "transform",
+                      "anchor",
+                      "visible",
+                      "opacity",
+                      "type",
+                      "asset",
+                      "scaleMode"
+                    ],
+                    "additionalProperties": {}
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "parent": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "children": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "transform": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          },
+                          "width": {
+                            "type": "number"
+                          },
+                          "height": {
+                            "type": "number"
+                          },
+                          "rotation": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y",
+                          "width",
+                          "height",
+                          "rotation"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "anchor": {
+                        "type": "object",
+                        "properties": {
+                          "h": {
+                            "type": "string",
+                            "enum": [
+                              "left",
+                              "right",
+                              "center",
+                              "stretch",
+                              "scale"
+                            ]
+                          },
+                          "v": {
+                            "type": "string",
+                            "enum": [
+                              "top",
+                              "bottom",
+                              "center",
+                              "stretch",
+                              "scale"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "h",
+                          "v"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "visible": {
+                        "type": "boolean"
+                      },
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "blend": {
+                        "type": "string"
+                      },
+                      "mask": {
+                        "type": [
+                          "boolean",
+                          "string"
+                        ]
+                      },
+                      "bindings": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "collection": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id"
+                          ],
+                          "additionalProperties": {}
+                        }
+                      },
+                      "extra": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "instance"
+                      },
+                      "component": {
+                        "type": "string"
+                      },
+                      "variant": {
+                        "type": "string"
+                      },
+                      "overrides": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "parent",
+                      "children",
+                      "transform",
+                      "anchor",
+                      "visible",
+                      "opacity",
+                      "type",
+                      "component"
+                    ],
+                    "additionalProperties": {}
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "parent": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "children": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "transform": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          },
+                          "width": {
+                            "type": "number"
+                          },
+                          "height": {
+                            "type": "number"
+                          },
+                          "rotation": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y",
+                          "width",
+                          "height",
+                          "rotation"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "anchor": {
+                        "type": "object",
+                        "properties": {
+                          "h": {
+                            "type": "string",
+                            "enum": [
+                              "left",
+                              "right",
+                              "center",
+                              "stretch",
+                              "scale"
+                            ]
+                          },
+                          "v": {
+                            "type": "string",
+                            "enum": [
+                              "top",
+                              "bottom",
+                              "center",
+                              "stretch",
+                              "scale"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "h",
+                          "v"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "visible": {
+                        "type": "boolean"
+                      },
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "blend": {
+                        "type": "string"
+                      },
+                      "mask": {
+                        "type": [
+                          "boolean",
+                          "string"
+                        ]
+                      },
+                      "bindings": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "collection": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id"
+                          ],
+                          "additionalProperties": {}
+                        }
+                      },
+                      "extra": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "component"
+                      },
+                      "variants": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "node": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "node"
+                          ],
+                          "additionalProperties": {}
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "parent",
+                      "children",
+                      "transform",
+                      "anchor",
+                      "visible",
+                      "opacity",
+                      "type",
+                      "variants"
+                    ],
+                    "additionalProperties": {}
+                  }
+                ]
+              }
+            },
+            "required": [
+              "op",
+              "node"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "type": "string",
+                "const": "remove"
+              },
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "op",
+              "id"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "type": "string",
+                "const": "move"
+              },
+              "id": {
+                "type": "string"
+              },
+              "parent": {
+                "type": "string"
+              },
+              "index": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "op",
+              "id",
+              "parent"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "ops"
+  ]
+}

@@ -4,7 +4,12 @@ Single source of truth for every format spoken by more than one Inkwell repo: th
 
 ## Commands
 
-Not scaffolded yet. List build, test and schema-generation commands here once they exist.
+Use yarn.
+
+- `yarn test`: Vitest (includes a check that `schemas/` is up to date)
+- `yarn typecheck`: `tsc --noEmit`
+- `yarn build`: emit `dist/`
+- `yarn gen:schemas`: regenerate `schemas/*.schema.json` from Zod (run after any schema change)
 
 ## Stack
 

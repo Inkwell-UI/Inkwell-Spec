@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "specVersion": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "nodes": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "instanceName": {
+            "type": "string"
+          },
+          "focus": {
+            "type": "object",
+            "properties": {
+              "order": {
+                "type": "number"
+              },
+              "overrides": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": {}
+          },
+          "dataBinding": {
+            "type": "string"
+          },
+          "scripts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "anchor": {
+            "type": "object",
+            "properties": {
+              "h": {
+                "type": "string"
+              },
+              "v": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": {}
+          },
+          "themable": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "boolean"
+            }
+          }
+        },
+        "additionalProperties": {}
+      }
+    }
+  },
+  "required": [
+    "specVersion",
+    "nodes"
+  ],
+  "additionalProperties": {}
+}
