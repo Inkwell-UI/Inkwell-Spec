@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { Swf, applyPatch, migrate, SPEC_VERSION, type Node, type Patch } from "../src/index.js";
+import { Swf, applyPatch, PatchError, migrate, SPEC_VERSION, type Node, type Patch } from "../src/index.js";
 import { render } from "../scripts/gen-schemas.js";
 
 const t = { x: 0, y: 0, width: 10, height: 10, rotation: 0 };
@@ -67,6 +67,22 @@ describe("applyPatch", () => {
     expect(r.nodes["1:1"]?.children).toEqual([]);
     expect(r.nodes["1:2"]?.parent).toBe("1:3");
     ok(r);
+  });
+  it("move with unknown id or parent throws a typed error", () => {
+    expect(() => run([{ op: "move", id: "9:9", parent: "1:1" }])).toThrow(
+      expect.objectContaining({ name: "PatchError", code: "unknown_node", id: "9:9" }),
+    );
+    expect(() => run([{ op: "move", id: "1:2", parent: "9:9" }])).toThrow(PatchError);
+    expect(() => run([{ op: "move", id: "1:2", parent: "9:9" }])).toThrow(
+      expect.objectContaining({ code: "unknown_parent", id: "9:9" }),
+    );
+  });
+  it("is atomic: one bad op leaves the input unchanged and returns nothing", () => {
+    const before = JSON.stringify(s);
+    expect(() =>
+      run([{ op: "remove", id: "1:2" }, { op: "move", id: "1:3", parent: "9:9" }]),
+    ).toThrow(PatchError);
+    expect(JSON.stringify(s)).toBe(before);
   });
 });
 

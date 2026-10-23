@@ -12,6 +12,13 @@ export type Patch = z.infer<typeof Patch>;
 
 type Nodes = Swf["nodes"];
 
+export class PatchError extends Error {
+  constructor(public code: "unknown_node" | "unknown_parent", public id: NodeId, public opIndex: number) {
+    super(`${code}: ${id} (op ${opIndex})`);
+    this.name = "PatchError";
+  }
+}
+
 function detach(nodes: Nodes, id: NodeId, parent: NodeId | null) {
   const p = parent === null ? undefined : nodes[parent];
   if (p) nodes[p.id] = { ...p, children: p.children.filter((c) => c !== id) };
@@ -24,10 +31,15 @@ function attach(nodes: Nodes, id: NodeId, parent: NodeId | null, index?: number)
   nodes[p.id] = { ...p, children: kids };
 }
 
-/** Pure: returns a new Swf; only touched nodes are copied. Keeps parent/children consistent. */
+/**
+ * Pure: returns a new Swf; only touched nodes are copied. Keeps parent/children consistent.
+ * `remove` deletes the node's whole subtree; removing an unknown id is a no-op.
+ * `move` with an unknown node or parent throws PatchError. Ops run on a private copy and the
+ * result is only returned if all succeed, so a bad op never leaves a partially applied patch.
+ */
 export function applyPatch(swf: Swf, patch: Patch): Swf {
   const nodes: Nodes = { ...swf.nodes };
-  for (const op of patch.ops) {
+  for (const [i, op] of patch.ops.entries()) {
     if (op.op === "upsert") {
       const old = nodes[op.node.id];
       if (old && old.parent !== op.node.parent) detach(nodes, old.id, old.parent);
@@ -48,8 +60,8 @@ export function applyPatch(swf: Swf, patch: Patch): Swf {
       }
     } else {
       const n = nodes[op.id];
-      // unknown ids are ignored: out-of-order patches must not crash the editor
-      if (!n || !nodes[op.parent]) continue;
+      if (!n) throw new PatchError("unknown_node", op.id, i);
+      if (!nodes[op.parent]) throw new PatchError("unknown_parent", op.parent, i);
       detach(nodes, n.id, n.parent);
       nodes[n.id] = { ...n, parent: op.parent };
       attach(nodes, n.id, op.parent, op.index);
