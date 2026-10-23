@@ -84,12 +84,24 @@ export const TextRun = obj({
   fill: Fill.optional(),
 });
 
+const LineHeight = z.discriminatedUnion("unit", [
+  obj({ unit: z.literal("auto") }),
+  obj({ unit: z.enum(["px", "percent"]), value: z.number() }),
+]);
+const LetterSpacing = obj({ unit: z.enum(["px", "percent"]), value: z.number() });
+
 export const Text = obj({
   ...base,
   type: z.literal("text"),
   content: z.string(), // literal text or "$KEY"
   runs: z.array(TextRun).length(1), // 0.1 allows exactly one run
   sizing: z.enum(["fixed", "autoWidth", "autoHeight"]),
+  align: z.enum(["left", "center", "right", "justify"]).default("left"),
+  verticalAlign: z.enum(["top", "center", "bottom"]).default("top"),
+  lineHeight: LineHeight.default({ unit: "auto" }),
+  letterSpacing: LetterSpacing.default({ unit: "px", value: 0 }),
+  textFit: z.enum(["none", "shrink", "fit"]).default("none"), // shrink-to-fit; separate from `sizing`
+  truncate: z.boolean().default(false),
 });
 
 export const Image = obj({

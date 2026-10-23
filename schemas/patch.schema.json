@@ -1214,6 +1214,102 @@
                           "autoWidth",
                           "autoHeight"
                         ]
+                      },
+                      "align": {
+                        "default": "left",
+                        "type": "string",
+                        "enum": [
+                          "left",
+                          "center",
+                          "right",
+                          "justify"
+                        ]
+                      },
+                      "verticalAlign": {
+                        "default": "top",
+                        "type": "string",
+                        "enum": [
+                          "top",
+                          "center",
+                          "bottom"
+                        ]
+                      },
+                      "lineHeight": {
+                        "default": {
+                          "unit": "auto"
+                        },
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "unit": {
+                                "type": "string",
+                                "const": "auto"
+                              }
+                            },
+                            "required": [
+                              "unit"
+                            ],
+                            "additionalProperties": {}
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "unit": {
+                                "type": "string",
+                                "enum": [
+                                  "px",
+                                  "percent"
+                                ]
+                              },
+                              "value": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "unit",
+                              "value"
+                            ],
+                            "additionalProperties": {}
+                          }
+                        ]
+                      },
+                      "letterSpacing": {
+                        "default": {
+                          "unit": "px",
+                          "value": 0
+                        },
+                        "type": "object",
+                        "properties": {
+                          "unit": {
+                            "type": "string",
+                            "enum": [
+                              "px",
+                              "percent"
+                            ]
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "unit",
+                          "value"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "textFit": {
+                        "default": "none",
+                        "type": "string",
+                        "enum": [
+                          "none",
+                          "shrink",
+                          "fit"
+                        ]
+                      },
+                      "truncate": {
+                        "default": false,
+                        "type": "boolean"
                       }
                     },
                     "required": [
