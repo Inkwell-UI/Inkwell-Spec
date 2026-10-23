@@ -1,0 +1,600 @@
+{
+  "schemaVersion": "0.0-draft",
+  "menu": "InventoryMenu",
+  "menuNameInEngine": {
+    "value": "InventoryMenu",
+    "confidence": "high",
+    "evidence": "SkyUI SKI_SettingsManager.psc:7 INVENTORY_MENU = \"InventoryMenu\" used in RegisterForMenu (:42), which only works with the engine's registered name; MagicMenu.as:120,:157 skse.OpenMenu(\"InventoryMenu\").",
+    "notes": "ItemMenu.as:485 uses skse.OpenMenu(\"Inventory Menu\") (with a space). Likely a SkyUI bug on a rare path (resetMenu); not used as evidence. Needs an in-game check."
+  },
+  "layer": "engine",
+  "sources": {
+    "vanilla": "interface/inventorymenu.swf from Skyrim - Interface.bsa, game 1.7.104 AE, archive sha256 e3d0c8d13d76ddb5cf9fc4cffe916475b708ea6cac2a46956442a558f14324de; decompiled with FFDec 26.3.0 (not stored in any repo)",
+    "skyui": "doodlum/SkyUI-Community @ b7a24a9 (2026-06-03): source/actionscript, source/swf/inventorymenu.xml, and data/interface/inventorymenu.swf decompiled with FFDec"
+  },
+  "confidenceLevels": {
+    "high": "Same name and signature in vanilla and SkyUI, and its role (engine->AS bridge, or nothing in AS calls or fills it) points at the executable.",
+    "medium": "Present in both but only AS-internal use is visible, or the engine role is inferred from one side.",
+    "low": "Recall or a single source; needs an in-game check.",
+    "none": "Differs between vanilla and SkyUI, so the engine cannot depend on it."
+  },
+  "stage": {
+    "width": 1280,
+    "height": 720,
+    "swfVersion": 15,
+    "rootFrameCount": 11,
+    "required": false,
+    "confidence": "medium",
+    "evidence": "Vanilla and SkyUI both 1280x720 px, SWF v15, 11 root frames. Frame rate differs (vanilla 30, SkyUI 60), so frame rate is not engine-required.",
+    "notes": "Size is a convention both share; SkyUI sets Stage.scaleMode = \"showAll\" itself (ItemMenu.as:46). Treat as a lint warning, not an error."
+  },
+  "instances": [
+    {
+      "id": "inst.itemListObject",
+      "path": "<return value of _root.GetInventoryItemList()>",
+      "type": "Object with entryList:Array",
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Neither SWF ever pushes into the item list's entryList (vanilla only fills CategoriesList and ItemCard's own list; SkyUI only fills categoryList), yet both read itemList.entryList in InvalidateListData. So the engine fills it through the object GetInventoryItemList returns. Vanilla returns InventoryLists_mc.ItemsList (BSScrollingList, get entryList at BSScrollingList.as:234); SkyUI returns inventoryLists.itemList (BSList get entryList, BSList.as:11).",
+      "notes": "The engine reaches the list by the returned object, not by a path, so its instance name is free. It must expose an Array named entryList. Entry fields seen read in vanilla: text, count, enabled, disabled, equipState, favorite, filterFlag, bestInClass, isStealing, negativeEffect, soulLVL (data, not names in the SWF; see unknown.entryFields)."
+    },
+    {
+      "id": "inst.root.Menu_mc",
+      "path": "_root.Menu_mc",
+      "type": "MovieClip (linkage InventoryMenuObj, class InventoryMenu)",
+      "required": false,
+      "class": "unknown - needs in-game/vanilla-SWF check",
+      "confidence": "medium",
+      "evidence": "Placed on the root at depth 1, frame 1 in both (vanilla char 121, SkyUI char 8). The only verified users are the root frame scripts, which forward InitExtensions/SetPlatform/GetInventoryItemList to it.",
+      "notes": "No evidence that the executable resolves _root.Menu_mc itself. Keep the name anyway: other plugins and Papyrus UI.Invoke paths tend to assume it (recall, not verified for this menu). Candidate for a base-layer or compatibility rule."
+    },
+    {
+      "id": "inst.skyui.Menu_mc.bottomBar",
+      "path": "_root.Menu_mc.bottomBar",
+      "required": false,
+      "class": "skyui-internal",
+      "confidence": "none",
+      "evidence": "SkyUI name (inventorymenu.xml sprite 8, depth 4); vanilla uses BottomBar_mc (sprite 121, depth 6).",
+      "notes": "Belongs in the SkyUI base layer."
+    },
+    {
+      "id": "inst.skyui.Menu_mc.exitMenuRect",
+      "path": "_root.Menu_mc.exitMenuRect",
+      "required": false,
+      "class": "skyui-internal",
+      "confidence": "none",
+      "evidence": "SkyUI name (sprite 8, depth 7); vanilla uses ExitMenuRect (depth 11). Used only by AS onMouseDown handlers (ItemMenu.as:70-76)."
+    },
+    {
+      "id": "inst.skyui.Menu_mc.inventoryLists",
+      "path": "_root.Menu_mc.inventoryLists",
+      "required": false,
+      "class": "skyui-internal",
+      "confidence": "none",
+      "evidence": "SkyUI name (sprite 8, depth 3, imported from skyui/InventoryLists.swf); vanilla uses InventoryLists_mc (depth 5) with CategoriesListHolder.List_mc / ItemsListHolder.List_mc children.",
+      "notes": "Children itemList, categoryList, panelContainer, zoomButtonHolder, tabBar, searchWidget are SkyUI base layer."
+    },
+    {
+      "id": "inst.skyui.Menu_mc.itemCardFadeHolder",
+      "path": "_root.Menu_mc.itemCardFadeHolder",
+      "required": false,
+      "class": "skyui-internal",
+      "confidence": "none",
+      "evidence": "SkyUI name (sprite 8, depth 1); vanilla uses ItemCardFadeHolder_mc (depth 1)."
+    },
+    {
+      "id": "inst.skyui.Menu_mc.itemCardFadeHolder.ItemCard_mc",
+      "path": "_root.Menu_mc.itemCardFadeHolder.ItemCard_mc",
+      "required": false,
+      "class": "skyui-internal",
+      "confidence": "medium",
+      "evidence": "The leaf name ItemCard_mc is the same in both, but its parent path differs (ItemCardFadeHolder_mc vs itemCardFadeHolder), so a path lookup by the engine would fail under SkyUI. Only AS reads it (ItemMenu constructor).",
+      "notes": "Same leaf name is SkyUI keeping vanilla's ItemCard layout, not an engine need."
+    },
+    {
+      "id": "inst.skyui.Menu_mc.mouseRotationRect",
+      "path": "_root.Menu_mc.mouseRotationRect",
+      "type": "MouseRotationInputCatcher",
+      "required": false,
+      "class": "skyui-internal",
+      "confidence": "none",
+      "evidence": "SkyUI name (depth 5); vanilla uses MouseRotationRect (depth 7). Optional in both (checked != undefined). The catcher calls _parent.onMouseRotationStart/Stop/FastClick, which call the engine (StartMouseRotation etc.)."
+    },
+    {
+      "id": "inst.vanilla.Menu_mc.ItemsListInputCatcher",
+      "path": "_root.Menu_mc.ItemsListInputCatcher",
+      "required": false,
+      "class": "vanilla-internal",
+      "confidence": "none",
+      "evidence": "Vanilla only (sprite 121, depth 3); absent in SkyUI."
+    },
+    {
+      "id": "inst.vanilla.Menu_mc.RestoreCategoryRect",
+      "path": "_root.Menu_mc.RestoreCategoryRect",
+      "required": false,
+      "class": "vanilla-internal",
+      "confidence": "none",
+      "evidence": "Vanilla only (sprite 121, depth 9); absent in SkyUI."
+    }
+  ],
+  "functions": [
+    {
+      "id": "fn.bridge.call",
+      "name": "ExternalInterface callback \"call\"",
+      "direction": "engine->as",
+      "args": ["methodName:String", "...args"],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "gfx.io.GameDelegate.initialize registers ExternalInterface.addCallback(\"call\", GameDelegate, receiveCall) in both (vanilla GameDelegate.as:59, SkyUI compiled GameDelegate.as:60). receiveCall dispatches to addCallBack handlers; nothing in AS invokes it.",
+      "notes": "This is how every entry in callbacks[] arrives. An unregistered name is a silent no-op (receiveCall returns undefined)."
+    },
+    {
+      "id": "fn.bridge.outgoing",
+      "name": "ExternalInterface.call(methodName, uid, ...args)",
+      "direction": "as->engine",
+      "args": ["methodName:String", "uid:Number", "...args"],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "GameDelegate.call unshifts (methodName, nextID) onto params and calls ExternalInterface.call.apply (vanilla GameDelegate.as:19). Identical in SkyUI.",
+      "notes": "Wire format for every entry with direction as->engine below. Replacements should reuse gfx.io.GameDelegate rather than reimplement it."
+    },
+    {
+      "id": "fn.bridge.respond",
+      "name": "ExternalInterface callback \"respond\"",
+      "direction": "engine->as",
+      "args": ["uid:Number", "...result"],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Registered next to \"call\" in both; receiveResponse looks up responseHash[uid] and applies scope[callBack]. Used by RequestItemCardInfo and CheckForMouseEquip.",
+      "notes": "The response handler name is chosen by AS, not the engine: vanilla and SkyUI pass UpdateItemCardInfo, SkyUI's ItemcardDataExtender.as:12 passes updateItemInfo."
+    },
+    {
+      "id": "fn.call.CheckForMouseEquip",
+      "name": "CheckForMouseEquip",
+      "direction": "as->engine",
+      "args": ["aiMouseButton:Number"],
+      "response": "engine replies via respond; both point it at AttemptEquip",
+      "required": false,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryMenu.as:204, SkyUI InventoryMenu.as:187, same args."
+    },
+    {
+      "id": "fn.call.CloseMenu",
+      "name": "CloseMenu",
+      "direction": "as->engine",
+      "args": [],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla ItemMenu.as:103,:134, InventoryMenu.as:81; SkyUI ItemMenu.as:162,:270,:484, InventoryMenu.as:143,:223.",
+      "notes": "The SWF closes itself (Tab handling is in AS), so without this call the menu cannot be closed from the UI."
+    },
+    {
+      "id": "fn.call.CloseTweenMenu",
+      "name": "CloseTweenMenu",
+      "direction": "as->engine",
+      "args": [],
+      "required": false,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryMenu.as:59; SkyUI InventoryMenu.as:75,:146,:224."
+    },
+    {
+      "id": "fn.call.DisabledItemSelect",
+      "name": "DisabledItemSelect",
+      "direction": "as->engine",
+      "args": [],
+      "required": false,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla ItemMenu.as:208; SkyUI ItemMenu.as:330."
+    },
+    {
+      "id": "fn.call.ItemCardListCallback",
+      "name": "ItemCardListCallback",
+      "direction": "as->engine",
+      "args": ["index:Number"],
+      "required": false,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryMenu.as:208; SkyUI InventoryMenu.as:191."
+    },
+    {
+      "id": "fn.call.ItemDrop",
+      "name": "ItemDrop",
+      "direction": "as->engine",
+      "args": ["amount:Number"],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryMenu.as:200; SkyUI InventoryMenu.as:182."
+    },
+    {
+      "id": "fn.call.ItemSelect",
+      "name": "ItemSelect",
+      "direction": "as->engine",
+      "args": ["(none) | slot:Number | amount:Number"],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryMenu.as:166,:174, ItemMenu.as:213; SkyUI InventoryMenu.as:92,:176, ItemMenu.as:335.",
+      "notes": "Three call shapes in both: [] from onItemSelect, [aiSlot] from AttemptEquip, [amount] from onQuantityMenuSelect. Equip/use goes through here."
+    },
+    {
+      "id": "fn.call.PlaySound",
+      "name": "PlaySound",
+      "direction": "as->engine",
+      "args": ["soundEditorId:String"],
+      "required": false,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryLists.as:126,:133,:155,:165,:238,:247, ItemCard.as:797; SkyUI InventoryLists.as:111,:118,:375,:383,:391, ItemCard.as:796. IDs seen: UIMenuBladeOpenSD, UIMenuBladeCloseSD, UIMenuFocus, UIMenuPrevNext."
+    },
+    {
+      "id": "fn.call.QuantitySliderOpen",
+      "name": "QuantitySliderOpen",
+      "direction": "as->engine",
+      "args": ["opening:Boolean"],
+      "required": false,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryMenu.as:213; SkyUI InventoryMenu.as:196."
+    },
+    {
+      "id": "fn.call.RequestItemCardInfo",
+      "name": "RequestItemCardInfo",
+      "direction": "as->engine",
+      "args": [],
+      "response": "item info object, via respond to an AS-chosen handler",
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla ItemMenu.as:170,:182, InventoryMenu.as:226; SkyUI ItemMenu.as:291, InventoryMenu.as:183,:208, ItemcardDataExtender.as:12."
+    },
+    {
+      "id": "fn.call.SaveIndices",
+      "name": "SaveIndices",
+      "direction": "as->engine",
+      "args": ["indices:Array"],
+      "required": false,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla ItemMenu.as:330; SkyUI ItemMenu.as:364.",
+      "notes": "Payload is defined by the SWF, not the engine: vanilla sends [categoryScrollPos, savedItemIndex per category...], SkyUI sends 5 values [categoryIndex, itemIndex, scrollPos, activeColumnIndex, activeColumnState]. The engine stores it and hands it back through RestoreIndices."
+    },
+    {
+      "id": "fn.call.ShowSoulGemList",
+      "name": "ShowSoulGemList",
+      "direction": "as->engine",
+      "args": [],
+      "required": false,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryMenu.as:195; SkyUI InventoryMenu.as:118."
+    },
+    {
+      "id": "fn.call.ShowTweenMenu",
+      "name": "ShowTweenMenu",
+      "direction": "as->engine",
+      "args": [],
+      "required": false,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryMenu.as:54,:68; SkyUI InventoryMenu.as:135."
+    },
+    {
+      "id": "fn.call.StartMouseRotation",
+      "name": "StartMouseRotation",
+      "direction": "as->engine",
+      "args": [],
+      "required": false,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla ItemMenu.as:264; SkyUI ItemMenu.as:339."
+    },
+    {
+      "id": "fn.call.StopMouseRotation",
+      "name": "StopMouseRotation",
+      "direction": "as->engine",
+      "args": [],
+      "required": false,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla ItemMenu.as:270; SkyUI ItemMenu.as:345."
+    },
+    {
+      "id": "fn.call.UpdateItem3D",
+      "name": "UpdateItem3D",
+      "direction": "as->engine",
+      "args": ["show:Boolean"],
+      "required": false,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla ItemMenu.as:169,:181,:189; SkyUI ItemMenu.as:289,:312,:451."
+    },
+    {
+      "id": "fn.call.ZoomItemModel",
+      "name": "ZoomItemModel",
+      "direction": "as->engine",
+      "args": ["delta:Number"],
+      "required": false,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla ItemMenu.as:116; SkyUI ItemMenu.as:264."
+    },
+    {
+      "id": "fn.call.myLog",
+      "name": "myLog",
+      "direction": "as->engine",
+      "args": ["message:String"],
+      "required": false,
+      "class": "unknown - needs in-game/vanilla-SWF check",
+      "confidence": "low",
+      "evidence": "Vanilla only, in Components/CrossPlatformButtons.as:28,:37,:41,:100,:245. Not in SkyUI.",
+      "notes": "Looks like a Bethesda debug hook. Whether the release executable handles it is unknown; do not rely on it."
+    },
+    {
+      "id": "fn.root.GetInventoryItemList",
+      "name": "GetInventoryItemList",
+      "direction": "engine->as",
+      "on": "_root",
+      "args": [],
+      "returns": "the item list object (see inst.itemListObject)",
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Defined as a root-frame-1 function in both SWFs with identical text (vanilla frame_1/DoAction.as; SkyUI data/interface/inventorymenu.swf frame_1, matching source/swf/inventorymenu.xml:173). No AS code calls it."
+    },
+    {
+      "id": "fn.root.InitExtensions",
+      "name": "InitExtensions",
+      "direction": "engine->as",
+      "on": "_root",
+      "args": [],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Root-frame-1 function in both, forwarding to Menu_mc.InitExtensions(); no AS caller. Both register their GameDelegate callbacks inside it, so callbacks only work once the engine has called it.",
+      "notes": "Vanilla ItemMenu.InitExtensions takes abPlayBladeSound, but the root wrapper passes nothing, so the engine passes no args through the root."
+    },
+    {
+      "id": "fn.root.SetPlatform",
+      "name": "SetPlatform",
+      "direction": "engine->as",
+      "on": "_root",
+      "args": ["aiPlatform:Number", "abPS3Switch:Boolean"],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Root-frame-1 function in both with the same parameter names; no AS caller.",
+      "notes": "Platform values seen in vanilla: 0 = PC, 7 = NX mouse (PLATFORM_NX_MOUSE), 6 = NX; vanilla treats 0 and 7 as mouse platforms."
+    }
+  ],
+  "callbacks": [
+    {
+      "id": "cb.AttemptChargeItem",
+      "name": "AttemptChargeItem",
+      "via": "GameDelegate.addCallBack",
+      "args": [],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryMenu.as:41; SkyUI InventoryMenu.as:33."
+    },
+    {
+      "id": "cb.AttemptEquip",
+      "name": "AttemptEquip",
+      "via": "GameDelegate.addCallBack",
+      "args": ["aiSlot:Number", "abCheckOverList?:Boolean (default true)"],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryMenu.as:39,:169-175; SkyUI InventoryMenu.as:31,:87-95.",
+      "notes": "Also the response target of CheckForMouseEquip in both."
+    },
+    {
+      "id": "cb.DropItem",
+      "name": "DropItem",
+      "via": "GameDelegate.addCallBack",
+      "args": [],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryMenu.as:40; SkyUI InventoryMenu.as:32."
+    },
+    {
+      "id": "cb.InvalidateListData",
+      "name": "InvalidateListData",
+      "via": "GameDelegate.addCallBack",
+      "args": [],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryLists.as:27,:272; SkyUI InventoryLists.as:40,:251.",
+      "notes": "Signals that the engine has (re)filled the item list's entryList. Both then call itemList.InvalidateData() and recompute category filterFlag from entry filterFlag & category flag."
+    },
+    {
+      "id": "cb.ItemRotating",
+      "name": "ItemRotating",
+      "via": "GameDelegate.addCallBack",
+      "args": [],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryMenu.as:42; SkyUI InventoryMenu.as:34.",
+      "notes": "Cosmetic (zoom button feedback); a missing handler is a silent no-op."
+    },
+    {
+      "id": "cb.RestoreIndices",
+      "name": "RestoreIndices",
+      "via": "GameDelegate.addCallBack",
+      "args": ["...elements of the last SaveIndices array"],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla ItemMenu.as:27,:309-319 reads arguments[0] then one per category; SkyUI ItemMenu.as:59,:199-235 expects exactly 5. Each reads back the shape it saved.",
+      "notes": "Name is engine-required; argument shape is SWF-defined (engine echoes SaveIndices). SkyUI falls back when length != 5, so it survives a vanilla-shaped save."
+    },
+    {
+      "id": "cb.SetButtonMapping",
+      "name": "SetButtonMapping",
+      "via": "GameDelegate.addCallBack",
+      "args": ["unknown"],
+      "required": false,
+      "class": "unknown - needs in-game/vanilla-SWF check",
+      "confidence": "medium",
+      "evidence": "Vanilla only: Shared/ButtonMapping.as:40, used by vanilla BottomBar.as:29,:436. SkyUI's inventory does not register it.",
+      "notes": "SkyUI works without it, so it is optional. The engine probably sends it (vanilla registers it); not verified."
+    },
+    {
+      "id": "cb.SetCategoriesList",
+      "name": "SetCategoriesList",
+      "via": "GameDelegate.addCallBack",
+      "args": ["...triples (text:String, flag:Number, bDontHide:Boolean)"],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla InventoryLists.as:26,:250-271; SkyUI InventoryLists.as:39,:221-250. Both read the same triples; flag == 0 marks a divider."
+    },
+    {
+      "id": "cb.ToggleMenuFade",
+      "name": "ToggleMenuFade",
+      "via": "GameDelegate.addCallBack",
+      "args": [],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla ItemMenu.as:26; SkyUI ItemMenu.as:58. Both implement it as _parent.gotoAndPlay(\"fadeOut\"/\"fadeIn\")."
+    },
+    {
+      "id": "cb.UpdateItemCardInfo",
+      "name": "UpdateItemCardInfo",
+      "via": "GameDelegate.addCallBack",
+      "args": ["itemInfo:Object"],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla ItemMenu.as:25; SkyUI ItemMenu.as:57. Also the respond target for RequestItemCardInfo in both.",
+      "notes": "Info fields read by vanilla ItemCard/BottomBar: type, name, upperCaseName, value, weight, armor, damage, warmth, effects, charge, currentCharge, totalCharges, usedCharge, stolen, poisoned, soulLVL, description, skillName, skillText, castLevel, castTime, spellCost, timeRemaining, listItems, sliderShown, count, negativeEffect, numItemEffects."
+    },
+    {
+      "id": "cb.UpdatePlayerInfo",
+      "name": "UpdatePlayerInfo",
+      "via": "GameDelegate.addCallBack",
+      "args": ["playerInfo:Object"],
+      "required": true,
+      "class": "engine-required",
+      "confidence": "high",
+      "evidence": "Vanilla ItemMenu.as:24; SkyUI ItemMenu.as:56."
+    }
+  ],
+  "frameLabels": [
+    {
+      "id": "fl.root.fadeIn",
+      "timeline": "_root",
+      "label": "fadeIn",
+      "frame": 7,
+      "required": false,
+      "class": "base convention (AS-internal)",
+      "confidence": "medium",
+      "evidence": "Root frame 7 in both. Only AS seeks it (ItemMenu.ToggleMenuFade: _parent.gotoAndPlay(\"fadeIn\")).",
+      "notes": "The engine triggers the fade by the ToggleMenuFade callback, not by seeking labels. Root frame 1 DoAction calls Menu_mc.SetFadedIn(); frame 6 DoAction calls Menu_mc.onFadeCompletion(); same in both."
+    },
+    {
+      "id": "fl.root.fadeOut",
+      "timeline": "_root",
+      "label": "fadeOut",
+      "frame": 2,
+      "required": false,
+      "class": "base convention (AS-internal)",
+      "confidence": "medium",
+      "evidence": "Root frame 2 in both. Only AS seeks it (ToggleMenuFade)."
+    }
+  ],
+  "skse": [
+    {
+      "id": "skse.ExtendData",
+      "call": "skse.ExtendData(true)",
+      "required": false,
+      "layer": "skse",
+      "confidence": "high",
+      "evidence": "SkyUI ItemMenu.as:48. Not in vanilla.",
+      "notes": "Asks SKSE to add extra fields to item entries; SkyUI's data setters rely on them."
+    },
+    {
+      "id": "skse.ForceContainerCategorization",
+      "call": "skse.ForceContainerCategorization(true)",
+      "required": false,
+      "layer": "skse",
+      "confidence": "high",
+      "evidence": "SkyUI ItemMenu.as:49. Not in vanilla."
+    },
+    {
+      "id": "skse.OpenMenu",
+      "call": "skse.OpenMenu(menuName)",
+      "required": false,
+      "layer": "skse",
+      "confidence": "medium",
+      "evidence": "SkyUI InventoryMenu.as:147,:225 (\"MagicMenu\"); MagicMenu.as:120,:157 (\"InventoryMenu\"); ItemMenu.as:485 (\"Inventory Menu\").",
+      "notes": "Inconsistent menu name; see menuNameInEngine. A replacement should use \"InventoryMenu\"."
+    },
+    {
+      "id": "skse.globalCheck",
+      "call": "_global.skse != null",
+      "required": false,
+      "layer": "skse",
+      "confidence": "high",
+      "evidence": "SkyUI ItemMenu.as:489 (checkBook returns early without SKSE).",
+      "notes": "Replacements must guard SKSE calls the same way to run without SKSE."
+    }
+  ],
+  "unknown": [
+    {
+      "id": "unknown.ClassNamesAndLinkage",
+      "item": "Class InventoryMenu / linkage InventoryMenuObj / Object.registerClass in root frame scripts",
+      "evidence": "Identical in both (InventoryMenuObj.as DoInitAction). Used to bind Menu_mc to its class.",
+      "notes": "No sign the engine looks up AS class names; likely free. Check by renaming in a test SWF."
+    },
+    {
+      "id": "unknown.InvalidateDataOnList",
+      "item": "itemList.InvalidateData()",
+      "evidence": "Both list classes define it (vanilla BSScrollingList.as:324, SkyUI BSList.as:27) and both call it from InvalidateListData.",
+      "notes": "Unknown whether the engine also calls it directly on the GetInventoryItemList object. Safe rule: expose it."
+    },
+    {
+      "id": "unknown.Menu_mc",
+      "item": "_root.Menu_mc instance name",
+      "evidence": "See inst.root.Menu_mc.",
+      "notes": "Test: rename Menu_mc in a copy of the SkyUI SWF, keep root wrappers pointing at the new name, and check that the menu still opens and fills."
+    },
+    {
+      "id": "unknown.entryFields",
+      "item": "Fields the engine writes into item entries and info objects",
+      "evidence": "Only reads are visible (see inst.itemListObject and cb.UpdateItemCardInfo notes). SKSE ExtendData adds more.",
+      "notes": "Data contract, not SWF names; document per game version from in-game dumps."
+    },
+    {
+      "id": "unknown.gfxExtensions",
+      "item": "_global.gfxExtensions = true",
+      "evidence": "Root frame 1 in both.",
+      "notes": "A Scaleform player switch, not an executable lookup. Keep it; it enables GFx extensions the AS uses."
+    },
+    {
+      "id": "unknown.handleInput",
+      "item": "Menu_mc.handleInput(details, pathToFocus)",
+      "evidence": "Same signature in both; reached through CLIK gfx.managers.FocusHandler/InputDelegate packaged in the SWF.",
+      "notes": "Probably CLIK-internal, not called by the executable. Needs a test to confirm input arrives without it."
+    },
+    {
+      "id": "unknown.menuNameSpace",
+      "item": "skse.OpenMenu(\"Inventory Menu\") vs \"InventoryMenu\"",
+      "evidence": "SkyUI ItemMenu.as:485 vs MagicMenu.as:120 and SKI_SettingsManager.psc:7.",
+      "notes": "Check in game whether \"Inventory Menu\" opens anything (resetMenu path, triggered from onItemHighlightChange at ItemMenu.as:297)."
+    }
+  ]
+}
