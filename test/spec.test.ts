@@ -103,6 +103,31 @@ describe("migrate", () => {
   });
 });
 
+describe("text fields", () => {
+  const textNode = (extra?: unknown) => ({
+    id: "1:4", name: "t", type: "text", parent: "1:2", children: [], transform: t, anchor, visible: true, opacity: 1, clipContent: false,
+    content: "hi", sizing: "fixed", runs: [{ start: 0, end: 2, font: { kind: "alias", name: "$EverywhereFont" }, size: 20 }],
+    ...(extra ? { extra } : {}),
+  });
+  const v1 = (extra?: unknown) => ({ ...minimal(), specVersion: 1, nodes: { ...minimal().nodes, "1:4": textNode(extra) } });
+  it("defaults when absent", () => {
+    const n: any = parse({ ...minimal(), nodes: { ...minimal().nodes, "1:4": textNode() } }).nodes["1:4"];
+    expect(n).toMatchObject({ align: "left", verticalAlign: "top", lineHeight: { unit: "auto" }, letterSpacing: { unit: "px", value: 0 }, textFit: "none", truncate: false });
+  });
+  it("migrates v1 extra.text, keeping the rest of extra", () => {
+    const old = v1({ text: { align: "right", verticalAlign: "center", lineHeight: 30, letterSpacing: 10, shrink: "fit", truncate: true, decoration: "underline" }, keep: 1 });
+    const r = migrate(old);
+    expect(r.specVersion).toBe(2);
+    const n: any = parse(r).nodes["1:4"];
+    expect(n).toMatchObject({ align: "right", verticalAlign: "center", lineHeight: { unit: "px", value: 30 }, letterSpacing: { unit: "percent", value: 10 }, textFit: "fit", truncate: true });
+    expect(n.extra).toEqual({ text: { decoration: "underline" }, keep: 1 });
+  });
+  it("migrates a v1 text node without extra, drops emptied extra", () => {
+    expect(parse(migrate(v1())).nodes["1:4"]).toMatchObject({ align: "left" });
+    expect((migrate(v1({ text: { align: "center" } })).nodes["1:4"] as any).extra).toBeUndefined();
+  });
+});
+
 describe("generated schemas", () => {
   it("are up to date (run yarn gen:schemas)", () => {
     for (const [f, text] of Object.entries(render())) {
