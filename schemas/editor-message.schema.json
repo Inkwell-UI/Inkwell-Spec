@@ -176,6 +176,27 @@
         "reason"
       ],
       "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "selectNode"
+        },
+        "nodeId": {
+          "type": "string"
+        },
+        "focus": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "nodeId"
+      ],
+      "additionalProperties": {}
     }
   ]
 }

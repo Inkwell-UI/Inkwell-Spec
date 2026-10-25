@@ -10,6 +10,12 @@ Every release of a consumer declares the spec version and protocol version it sp
 | 4 | 3 | `main` | `main` | `main` | n/a | Images: image fill `opacity`, Frame `fills`, Image `fillOpacity`; `asset` / `needAssets` messages. |
 | 5 | 3 | `main` | `main` | `main` | n/a | New graph, node pack and `packs.lock` formats (visual scripting, 0.2). IR and protocol unchanged. |
 | 5 | 4 | `main` | `main` | `main` | n/a | Figma plugin connects by approval in the editor instead of a pasted token. Spec version unchanged. |
+| 5 | 5 | `main` | `main` | `main` | n/a | Editor can select / focus a layer in Figma (`selectNode`). Spec version unchanged. |
+
+## 4 to 5 (protocol): selectNode
+
+- **What changed:** new editor message `selectNode {nodeId, focus}` (`focus` defaults to false). The plugin selects the node only if it exists on the current page, and with `focus` also scrolls and zooms the viewport to it; an unknown or removed node changes nothing (the plugin only shows a Figma notice; the protocol has no plugin reply for it). IR and spec version (5) are unchanged; no migration.
+- **Who must do what:** plugin and editor move to protocol 5 together; `ackHello` refuses a protocol 4 plugin with the "Update the plugin" message.
 
 ## 3 to 4 (protocol): approve-on-connect
 

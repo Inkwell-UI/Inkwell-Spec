@@ -4,7 +4,7 @@ import { Patch } from "./patch.js";
 import { SPEC_VERSION } from "./version.js";
 
 /** Bump on every handshake or message change. Editor and plugin must match exactly. */
-export const PROTOCOL_VERSION = 4;
+export const PROTOCOL_VERSION = 5;
 
 const msg = <T extends z.ZodRawShape>(s: T) => z.looseObject(s); // unknown keys survive
 
@@ -72,7 +72,9 @@ export const NeedAssets = msg({ type: z.literal("needAssets"), hashes: z.array(A
 export const Pending = msg({ type: z.literal("pending") });
 /** Protocol 4: the user refused, or the editor could not ask (`busy`, `timeout`). The editor closes the socket. */
 export const Denied = msg({ type: z.literal("denied"), reason: z.string() });
-export const EditorMessage = z.discriminatedUnion("type", [HelloAck, Resend, ErrorMsg, Status, NeedAssets, Pending, Denied]);
+/** Protocol 5: select the layer in Figma (`focus`: also scroll and zoom the viewport to it). The plugin acts only if the node exists on the current page. */
+export const SelectNode = msg({ type: z.literal("selectNode"), nodeId: NodeId, focus: z.boolean().default(false) });
+export const EditorMessage = z.discriminatedUnion("type", [HelloAck, Resend, ErrorMsg, Status, NeedAssets, Pending, Denied, SelectNode]);
 export type EditorMessage = z.infer<typeof EditorMessage>;
 
 /** Editor side: answer a hello. Exact protocol match required; a spec mismatch is also refused. */

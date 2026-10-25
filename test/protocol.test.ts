@@ -47,7 +47,7 @@ describe("protocol", () => {
     expect(PluginMessage.safeParse({ type: "asset", hash: H }).success).toBe(false);
   });
   it("protocol 4: hello needs a 64-hex secret and a file name; pending and denied parse", () => {
-    expect(PROTOCOL_VERSION).toBe(4);
+    expect(PROTOCOL_VERSION).toBe(5);
     expect(PluginMessage.parse(hello)).toBeTruthy();
     for (const bad of ["", "ab".repeat(31), "AB".repeat(32), "zz".repeat(32)])
       expect(PluginMessage.safeParse({ ...hello, pluginSecret: bad }).success).toBe(false);
@@ -56,6 +56,12 @@ describe("protocol", () => {
     expect(EditorMessage.parse({ type: "denied", reason: "busy" })).toBeTruthy();
     expect(EditorMessage.safeParse({ type: "denied" }).success).toBe(false);
     expect(ackHello({ ...hello, protocolVersion: 3 }, "1.0").error).toMatch(/Update the plugin/);
+  });
+  it("protocol 5: selectNode parses, focus defaults to false; a protocol 4 plugin is refused", () => {
+    expect(EditorMessage.parse({ type: "selectNode", nodeId: "1:2" })).toMatchObject({ focus: false });
+    expect(EditorMessage.parse({ type: "selectNode", nodeId: "1:2", focus: true })).toMatchObject({ focus: true });
+    expect(EditorMessage.safeParse({ type: "selectNode" }).success).toBe(false);
+    expect(ackHello({ ...hello, protocolVersion: 4 }, "1.0")).toMatchObject({ ok: false, error: expect.stringMatching(/Update the plugin/) });
   });
   it("hashNode ignores key order", () => {
     expect(hashNode({ a: 1, b: { c: 2, d: 3 } })).toBe(hashNode({ b: { d: 3, c: 2 }, a: 1 }));
