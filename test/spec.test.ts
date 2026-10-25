@@ -165,7 +165,7 @@ describe("3 to 4 (images)", () => {
   });
   it("a spec 3 document migrates unchanged", () => {
     const old = { ...minimal(), specVersion: 3 };
-    expect(migrate(old)).toEqual({ ...old, specVersion: 4 });
+    expect(migrate(old)).toEqual({ ...old, specVersion: SPEC_VERSION });
   });
   it("imageHashes finds Image nodes and image fills", () => {
     const s = Swf.parse(doc());

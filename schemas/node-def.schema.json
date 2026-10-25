@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+$"
+    },
+    "major": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "title": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "milestone": {
+      "type": "string"
+    },
+    "pure": {
+      "default": false,
+      "type": "boolean"
+    },
+    "inputs": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Exec",
+              "Bool",
+              "Number",
+              "String",
+              "Array",
+              "Object",
+              "Text",
+              "Button",
+              "List",
+              "Image",
+              "Clip"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "default": {}
+        },
+        "required": [
+          "name",
+          "type"
+        ],
+        "additionalProperties": {}
+      }
+    },
+    "outputs": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Exec",
+              "Bool",
+              "Number",
+              "String",
+              "Array",
+              "Object",
+              "Text",
+              "Button",
+              "List",
+              "Image",
+              "Clip"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "default": {}
+        },
+        "required": [
+          "name",
+          "type"
+        ],
+        "additionalProperties": {}
+      }
+    },
+    "fields": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    },
+    "as2Template": {
+      "type": "string"
+    },
+    "extra": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    }
+  },
+  "required": [
+    "kind",
+    "major",
+    "title",
+    "category"
+  ],
+  "additionalProperties": {}
+}

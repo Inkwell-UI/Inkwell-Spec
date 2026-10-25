@@ -8,6 +8,13 @@ Every release of a consumer declares the spec version and protocol version it sp
 | 2 | 1 | `main` | `main` | `main` | n/a | Text node gains `align`, `verticalAlign`, `lineHeight`, `letterSpacing`, `textFit`, `truncate`. |
 | 3 | 2 | `main` | `main` | `main` | n/a | One SWF per top-level Figma frame; alias `FontRef.styleName`. |
 | 4 | 3 | `main` | `main` | `main` | n/a | Images: image fill `opacity`, Frame `fills`, Image `fillOpacity`; `asset` / `needAssets` messages. |
+| 5 | 3 | `feat/graph-format` | `main` | `main` | n/a | New graph, node pack and `packs.lock` formats (visual scripting, 0.2). IR and protocol unchanged. |
+
+## 4 to 5 (new formats: graphs and packs)
+
+- **What changed:** new schemas `Graph` (one file per graph, `swfs/<name>/graphs/<id>.json`), `PackManifest`, `NodeDef`, `PacksLock`, and the pin type model with `pinCompat()`. IR, overlay and protocol are untouched; `specVersion` is bumped so graph files carry the same version.
+- **Migration:** `migrate()` runs 4->5, a no-op that only bumps `specVersion`.
+- **Who must do what:** protocol stays 3, but `hello` carries `specVersion` and `ackHello` refuses a mismatch, so the editor and the Figma plugin must move to spec 5 together (the plugin only needs a rebuild against the new spec). Projects saved at spec 4 keep opening (migration). Consumers adopt the graph formats when they implement visual scripting.
 
 ## 3 to 4 (IR and protocol change: images)
 

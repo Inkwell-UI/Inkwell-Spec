@@ -15,6 +15,10 @@ Use yarn.
 
 TypeScript, Zod schemas, generated JSON Schemas, protocol docs. Published to npm for the TypeScript repos; the runtime generates or validates its C++ types against the same schemas.
 
+## Source files
+
+`src/`: `ir`, `overlay`, `patch`, `protocol`, `hash`, `version` (migrations), `graph` (graph documents), `pack` (manifest, node definitions, `packs.lock`), `pins` (pin types and `pinCompat`).
+
 ## Rules that are easy to break
 
 - **Zod is the source of truth.** JSON Schemas and docs are generated from it, never edited by hand.
