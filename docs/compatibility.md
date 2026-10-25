@@ -8,8 +8,8 @@ Every release of a consumer declares the spec version and protocol version it sp
 | 2 | 1 | `main` | `main` | `main` | n/a | Text node gains `align`, `verticalAlign`, `lineHeight`, `letterSpacing`, `textFit`, `truncate`. |
 | 3 | 2 | `main` | `main` | `main` | n/a | One SWF per top-level Figma frame; alias `FontRef.styleName`. |
 | 4 | 3 | `main` | `main` | `main` | n/a | Images: image fill `opacity`, Frame `fills`, Image `fillOpacity`; `asset` / `needAssets` messages. |
-| 5 | 3 | `feat/graph-format` | `main` | `main` | n/a | New graph, node pack and `packs.lock` formats (visual scripting, 0.2). IR and protocol unchanged. |
-| 5 | 4 | `feat/figma-approval` | `feat/figma-approval` | `feat/figma-approval` | n/a | Figma plugin connects by approval in the editor instead of a pasted token. Spec version unchanged. |
+| 5 | 3 | `main` | `main` | `main` | n/a | New graph, node pack and `packs.lock` formats (visual scripting, 0.2). IR and protocol unchanged. |
+| 5 | 4 | `main` | `main` | `main` | n/a | Figma plugin connects by approval in the editor instead of a pasted token. Spec version unchanged. |
 
 ## 3 to 4 (protocol): approve-on-connect
 
