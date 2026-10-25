@@ -4,10 +4,10 @@ Every release of a consumer declares the spec version and protocol version it sp
 
 | Spec version | Protocol version | `@inkwell-ui/spec` | Editor | Figma plugin | Runtime | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | 1 | `feat/foundations`, `feat/protocol` | `feat/swf-compiler` (0.1 work in progress) | `feat/plugin` | n/a | First IR. Text layout hints lived in `extra.text`. |
-| 2 | 1 | `feat/ir-text` | `feat/ir-text` and later | `feat/ir-text` and later | n/a | Text node gains `align`, `verticalAlign`, `lineHeight`, `letterSpacing`, `textFit`, `truncate`. |
-| 3 | 2 | `feat/swf-per-frame` | `feat/swf-per-frame` and later | `feat/swf-per-frame` and later | n/a | One SWF per top-level Figma frame; alias `FontRef.styleName`. |
-| 4 | 3 | `feat/images` | `feat/images` and later | `feat/images` and later | n/a | Images: image fill `opacity`, Frame `fills`, Image `fillOpacity`; `asset` / `needAssets` messages. |
+| 1 | 1 | `main` | `main` (0.1 work in progress) | `main` | n/a | First IR. Text layout hints lived in `extra.text`. |
+| 2 | 1 | `main` | `main` | `main` | n/a | Text node gains `align`, `verticalAlign`, `lineHeight`, `letterSpacing`, `textFit`, `truncate`. |
+| 3 | 2 | `main` | `main` | `main` | n/a | One SWF per top-level Figma frame; alias `FontRef.styleName`. |
+| 4 | 3 | `main` | `main` | `main` | n/a | Images: image fill `opacity`, Frame `fills`, Image `fillOpacity`; `asset` / `needAssets` messages. |
 
 ## 3 to 4 (IR and protocol change: images)
 
