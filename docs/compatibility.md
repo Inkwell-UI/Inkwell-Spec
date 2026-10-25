@@ -9,6 +9,12 @@ Every release of a consumer declares the spec version and protocol version it sp
 | 3 | 2 | `main` | `main` | `main` | n/a | One SWF per top-level Figma frame; alias `FontRef.styleName`. |
 | 4 | 3 | `main` | `main` | `main` | n/a | Images: image fill `opacity`, Frame `fills`, Image `fillOpacity`; `asset` / `needAssets` messages. |
 | 5 | 3 | `feat/graph-format` | `main` | `main` | n/a | New graph, node pack and `packs.lock` formats (visual scripting, 0.2). IR and protocol unchanged. |
+| 5 | 4 | `feat/figma-approval` | `feat/figma-approval` | `feat/figma-approval` | n/a | Figma plugin connects by approval in the editor instead of a pasted token. Spec version unchanged. |
+
+## 3 to 4 (protocol): approve-on-connect
+
+- **What changed:** `hello` gains `pluginSecret` (64 lower-case hex digits, 32 random bytes) and `fileName`. New editor messages `pending` (secret unknown, the user is being asked) and `denied {reason}` (refused, or `busy` / `timeout`). The `token` query parameter is no longer used on the Figma bridge (the runtime debug server keeps its token). `ackHello` still refuses any protocol or spec mismatch. IR and spec version (5) are unchanged; no migration.
+- **Who must do what:** plugin and editor move to protocol 4 together. The plugin makes the secret once (`crypto.getRandomValues`), keeps it in `figma.clientStorage` and sends it in every `hello`. The editor keeps only the SHA-256 of approved secrets in its user settings (not in the project), answers an unknown secret with `pending` and asks the user; a pending socket may send nothing else, is closed after 60 s, and a denied secret is refused for the rest of the session. A protocol 3 plugin gets a "Protocol mismatch ... Update the plugin" `helloAck`.
 
 ## 4 to 5 (new formats: graphs and packs)
 

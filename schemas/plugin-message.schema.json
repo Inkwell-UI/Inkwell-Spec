@@ -23,13 +23,22 @@
         },
         "fileKey": {
           "type": "string"
+        },
+        "pluginSecret": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "fileName": {
+          "type": "string"
         }
       },
       "required": [
         "type",
         "pluginVersion",
         "protocolVersion",
-        "specVersion"
+        "specVersion",
+        "pluginSecret",
+        "fileName"
       ],
       "additionalProperties": {}
     },

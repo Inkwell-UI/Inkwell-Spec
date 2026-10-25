@@ -4,13 +4,16 @@ import { Patch } from "./patch.js";
 import { SPEC_VERSION } from "./version.js";
 
 /** Bump on every handshake or message change. Editor and plugin must match exactly. */
-export const PROTOCOL_VERSION = 3;
+export const PROTOCOL_VERSION = 4;
 
 const msg = <T extends z.ZodRawShape>(s: T) => z.looseObject(s); // unknown keys survive
 
 /** Derived problems reported alongside a patch or status; never stored in the IR. */
 export const SyncIssue = msg({ code: z.string(), message: z.string(), nodeId: NodeId.optional() });
 export type SyncIssue = z.infer<typeof SyncIssue>;
+
+/** 32 random bytes as 64 lower-case hex digits. */
+export const PluginSecret = z.string().regex(/^[0-9a-f]{64}$/, "pluginSecret must be 64 lower-case hex digits");
 
 // plugin -> editor
 export const Hello = msg({
@@ -19,6 +22,10 @@ export const Hello = msg({
   protocolVersion: z.number().int(),
   specVersion: z.number().int(),
   fileKey: z.string().optional(),
+  /** Protocol 4: random 256-bit credential the plugin makes once and keeps in Figma client storage; the editor stores only its SHA-256. */
+  pluginSecret: PluginSecret,
+  /** Protocol 4: the Figma file's name, shown in the editor's approval prompt. */
+  fileName: z.string(),
 });
 /** SWF metadata (no nodes). Sent with the first upsert of a root and whenever it changes. */
 export const SwfMeta = msg({ id: NodeId, name: z.string(), stage: Swf.shape.stage, target: Swf.shape.target.optional() });
@@ -61,7 +68,11 @@ export const Status = msg({
 });
 /** Protocol 3: image hashes an IR references that the editor does not have; the plugin answers with one `asset` message each. */
 export const NeedAssets = msg({ type: z.literal("needAssets"), hashes: z.array(AssetHash) });
-export const EditorMessage = z.discriminatedUnion("type", [HelloAck, Resend, ErrorMsg, Status, NeedAssets]);
+/** Protocol 4: the secret is unknown; the user is being asked. The socket may send nothing else until `helloAck` or `denied`. */
+export const Pending = msg({ type: z.literal("pending") });
+/** Protocol 4: the user refused, or the editor could not ask (`busy`, `timeout`). The editor closes the socket. */
+export const Denied = msg({ type: z.literal("denied"), reason: z.string() });
+export const EditorMessage = z.discriminatedUnion("type", [HelloAck, Resend, ErrorMsg, Status, NeedAssets, Pending, Denied]);
 export type EditorMessage = z.infer<typeof EditorMessage>;
 
 /** Editor side: answer a hello. Exact protocol match required; a spec mismatch is also refused. */

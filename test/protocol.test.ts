@@ -3,7 +3,7 @@ import { ackHello, hashNode, PluginMessage, EditorMessage, PROTOCOL_VERSION, SPE
 
 const H = "0123456789abcdef0123456789abcdef01234567";
 
-const hello = { type: "hello" as const, pluginVersion: "0.1.0", protocolVersion: PROTOCOL_VERSION, specVersion: SPEC_VERSION };
+const hello = { type: "hello" as const, pluginVersion: "0.1.0", protocolVersion: PROTOCOL_VERSION, specVersion: SPEC_VERSION, pluginSecret: "ab".repeat(32), fileName: "Hud.fig" };
 
 describe("protocol", () => {
   it("acks a matching hello", () => expect(ackHello(hello, "1.0")).toMatchObject({ ok: true, protocolVersion: PROTOCOL_VERSION }));
@@ -45,6 +45,17 @@ describe("protocol", () => {
       expect(EditorMessage.safeParse({ type: "needAssets", hashes: [bad] }).success).toBe(false);
     }
     expect(PluginMessage.safeParse({ type: "asset", hash: H }).success).toBe(false);
+  });
+  it("protocol 4: hello needs a 64-hex secret and a file name; pending and denied parse", () => {
+    expect(PROTOCOL_VERSION).toBe(4);
+    expect(PluginMessage.parse(hello)).toBeTruthy();
+    for (const bad of ["", "ab".repeat(31), "AB".repeat(32), "zz".repeat(32)])
+      expect(PluginMessage.safeParse({ ...hello, pluginSecret: bad }).success).toBe(false);
+    expect(PluginMessage.safeParse({ ...hello, fileName: undefined }).success).toBe(false);
+    expect(EditorMessage.parse({ type: "pending" })).toBeTruthy();
+    expect(EditorMessage.parse({ type: "denied", reason: "busy" })).toBeTruthy();
+    expect(EditorMessage.safeParse({ type: "denied" }).success).toBe(false);
+    expect(ackHello({ ...hello, protocolVersion: 3 }, "1.0").error).toMatch(/Update the plugin/);
   });
   it("hashNode ignores key order", () => {
     expect(hashNode({ a: 1, b: { c: 2, d: 3 } })).toBe(hashNode({ b: { d: 3, c: 2 }, a: 1 }));
