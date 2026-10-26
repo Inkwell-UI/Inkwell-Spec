@@ -138,7 +138,30 @@ export function imageHashes(n: Node): string[] {
 }
 
 export const Asset = obj({ kind: z.enum(["image", "font"]), hash: z.string(), name: z.string().optional() });
-export const Theme = obj({ name: z.string(), modes: z.array(z.string()), variables: z.record(z.string(), z.unknown()).optional() });
+/** One Figma variable of a collection: its type and its value in every mode (aliases are resolved by the plugin; a colour is the IR `Color`). */
+export const ThemeVariable = obj({
+  name: z.string(),
+  type: z.enum(["color", "number", "boolean", "string"]),
+  values: z.record(z.string(), z.unknown()), // mode name -> Color | number | boolean | string
+});
+export type ThemeVariable = z.infer<typeof ThemeVariable>;
+/**
+ * One Figma variable collection (SPEC-CHANGES V6): `name` is the collection, `modes` its modes in Figma's order and `variables` is keyed by the
+ * variable id that `bindings` refer to. The themes of a menu are the modes of the collection the project picks (`themedCollection`).
+ */
+export const Theme = obj({ name: z.string(), modes: z.array(z.string()), variables: z.record(z.string(), ThemeVariable).optional() });
+export type Theme = z.infer<typeof Theme>;
+
+/** `bindings` keys the toolchain understands (V6.2); any other key is kept and ignored. */
+export const THEME_BINDING_KEYS = [
+  "fills/N/color", "strokes/N/color", "opacity", "visible", "transform/width", "transform/height", "runs/0/fill/color", "runs/0/size",
+] as const;
+export const isThemeBindingKey = (k: string): boolean => THEME_BINDING_KEYS.some((p) => k === p || (p.includes("/N/") && new RegExp(`^${p.replace("N", String.raw`\d+`)}$`).test(k)));
+
+/** The collection that supplies the themes: the one named `preferred`, else the first with two or more modes. */
+export function themedCollection(themes: readonly Theme[] | undefined, preferred?: string): Theme | undefined {
+  return themes?.find((t) => t.name === preferred) ?? themes?.find((t) => t.modes.length >= 2);
+}
 
 export const Swf = obj({
   specVersion: z.number().int(),

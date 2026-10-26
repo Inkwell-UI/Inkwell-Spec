@@ -2101,7 +2101,36 @@
             "propertyNames": {
               "type": "string"
             },
-            "additionalProperties": {}
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "color",
+                    "number",
+                    "boolean",
+                    "string"
+                  ]
+                },
+                "values": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "values"
+              ],
+              "additionalProperties": {}
+            }
           }
         },
         "required": [

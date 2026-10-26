@@ -64,3 +64,7 @@ Every release of a consumer declares the spec version and protocol version it sp
 - **Who must do what:** the editor runs `migrate()` on any IR below the current `specVersion` when a project loads; old projects always open. The Figma plugin writes v2 only and no longer writes `extra.text`.
 - **A v1 consumer reading v2 data:** not supported. The editor refuses a plugin whose `specVersion` differs from its own and shows a mismatch message in `helloAck`.
 - **Protocol:** unchanged (v1); `hello` carries `specVersion`, so mismatches are caught at connect time.
+
+## Themes (SPEC-CHANGES V6, milestone 0.4)
+
+`Swf.themes` is a list of Figma variable collections (`Theme`: collection name, modes, variables keyed by variable id with a value per mode); the themes of a menu are the modes of the collection `themedCollection` picks. `SwfMeta.themes` carries them from the plugin; it is optional, so the protocol version stays 5 and an older editor ignores it. No spec version change: every field is optional.

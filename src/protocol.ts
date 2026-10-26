@@ -28,7 +28,8 @@ export const Hello = msg({
   fileName: z.string(),
 });
 /** SWF metadata (no nodes). Sent with the first upsert of a root and whenever it changes. */
-export const SwfMeta = msg({ id: NodeId, name: z.string(), stage: Swf.shape.stage, target: Swf.shape.target.optional() });
+/** `themes` (spec 7, optional so the protocol version stays 5): the Figma variable collections; present = replaces the SWF's themes, absent = unchanged. */
+export const SwfMeta = msg({ id: NodeId, name: z.string(), stage: Swf.shape.stage, target: Swf.shape.target.optional(), themes: Swf.shape.themes });
 export type SwfMeta = z.infer<typeof SwfMeta>;
 /** One SWF per top-level Figma frame: `swfId` is that frame's node id. */
 export const PatchMsg = msg({
