@@ -11,7 +11,7 @@ Every release of a consumer declares the spec version and protocol version it sp
 | 5 | 3 | n/a | `main` | `main` | `main` | n/a | New graph, node pack and `packs.lock` formats (visual scripting, 0.2). IR and protocol unchanged. |
 | 5 | 4 | n/a | `main` | `main` | `main` | n/a | Figma plugin connects by approval in the editor instead of a pasted token. Spec version unchanged. |
 | 5 | 5 | n/a | `main` | `main` | `main` | n/a | Editor can select / focus a layer in Figma (`selectNode`). Spec version unchanged. |
-| 6 | 5 | 1 | `feat/runtime-formats` | not yet (rebuild at spec 6) | not yet (rebuild at spec 6) | 0.3.0 (planned) | Runtime formats (0.3): menu JSON, INI, runtime requirement, saved scope, debug protocol. Figma protocol unchanged. |
+| 6 | 5 | 1 | `main` | `main` (0.3) | `main` (rebuilt at spec 6) | 0.3.0 (`main`; not seen in game) | Runtime formats (0.3): menu JSON, INI, runtime requirement, saved scope, debug protocol. Figma protocol unchanged. |
 
 ## 5 to 6 (new formats: Inkwell Runtime, 0.3)
 

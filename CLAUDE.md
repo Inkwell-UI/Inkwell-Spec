@@ -13,7 +13,7 @@ Use yarn.
 
 ## Stack
 
-TypeScript, Zod schemas, generated JSON Schemas, protocol docs. Published to npm for the TypeScript repos; the runtime generates or validates its C++ types against the same schemas.
+TypeScript, Zod schemas, generated JSON Schemas, protocol docs. Published to npm for the TypeScript repos; the Inkwell Runtime (C++) mirrors the INI parser, the bridge and Papyrus tables and the co-save constants by hand and is kept in step by shared test vectors (`Inkwell-Runtime/test-vectors/ini/`, produced by the Spec's `parseIni`/`resolveMenu`).
 
 ## Source files
 
