@@ -1,5 +1,5 @@
 /** Bump on every IR/overlay change and add a Migration from the previous version. */
-export const SPEC_VERSION = 6;
+export const SPEC_VERSION = 7;
 
 export type Migration = { from: number; to: number; fn: (doc: any) => any };
 
@@ -38,8 +38,10 @@ export const noop = (doc: any): any => doc;
 
 /** 5 -> 6 (runtime formats): new MenuDef, MenuSettings, RuntimeIni, RuntimeMessage; GraphVariable.scope gains `saved`; NodeDef.requiresRuntime; NodeOverlay.list. All optional or new: nothing to rewrite. */
 
+/** 6 -> 7 (localization, V7): NodeOverlay.locKey and .font, the Localization schema (`localization.json`), MenuDef.translations. All optional or new: nothing to rewrite. */
+
 /** Ordered chain. */
-export const MIGRATIONS: Migration[] = [{ from: 1, to: 2, fn: textLayoutToFields }, { from: 2, to: 3, fn: noop }, { from: 3, to: 4, fn: noop }, { from: 4, to: 5, fn: noop }, { from: 5, to: 6, fn: noop }];
+export const MIGRATIONS: Migration[] = [{ from: 1, to: 2, fn: textLayoutToFields }, { from: 2, to: 3, fn: noop }, { from: 3, to: 4, fn: noop }, { from: 4, to: 5, fn: noop }, { from: 5, to: 6, fn: noop }, { from: 6, to: 7, fn: noop }];
 
 /** Runs migrations in order until doc.specVersion reaches target. Throws on newer or unreachable versions. */
 export function migrate(

@@ -1,5 +1,6 @@
 // S1 menu JSON (`MenuDef`) and S9 per-SWF source (`MenuSettings`).
 import { z } from "zod";
+import { TRANSLATION_MOD } from "./localization.js";
 import { FIRST_RUNTIME_VERSION } from "./runtime.js";
 
 /** The runtime has 16 template slots in total, shared by every installed mod (S1 rule 2). */
@@ -61,6 +62,8 @@ export const MenuDef = z.looseObject({
   inputContext: InputContext.optional(),
   depth: Depth,
   triggers: Triggers.default(() => Triggers.parse({})),
+  /** V13.2: the mod name of the translation files (`Interface/Translations/<translations>_<LANGUAGE>.txt`); absent = the menu has no translations. */
+  translations: z.string().regex(TRANSLATION_MOD).optional(),
   extra: Extra,
 });
 export type MenuDef = z.infer<typeof MenuDef>;

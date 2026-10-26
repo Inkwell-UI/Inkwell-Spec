@@ -89,6 +89,7 @@ export const BRIDGE_MEMBERS: readonly BridgeMember[] = [
   { name: "offsetX", kind: "property", type: "Number" },
   { name: "offsetY", kind: "property", type: "Number" },
   { name: "theme", kind: "property", type: "String" },
+  { name: "language", kind: "property", type: "String" }, // V13.2, runtime 0.4.0: the game language, upper case (`ENGLISH`)
   { name: "log", kind: "function", type: "Void", params: "level:String, nodeId:String, text:String" },
   { name: "glueReady", kind: "function", type: "Void", params: "" },
   { name: "openMenu", kind: "function", type: "Boolean", params: "name:String" },
@@ -98,6 +99,7 @@ export const BRIDGE_MEMBERS: readonly BridgeMember[] = [
   { name: "playSound", kind: "function", type: "Boolean", params: "editorId:String" },
   { name: "getSetting", kind: "function", type: "String", params: "section:String, key:String, defaultValue:String" },
   { name: "getInputDevice", kind: "function", type: "String", params: "" },
+  { name: "translate", kind: "function", type: "String", params: "key:String" }, // V13.2, runtime 0.4.0: the text of a `$KEY` for the game language, or the key itself
   { name: "getSaved", kind: "function", type: "Object", params: "name:String, defaultValue:Object" },
   { name: "setSaved", kind: "function", type: "Void", params: "name:String, value:Object" },
   { name: "watch", kind: "function", type: "Void", params: "graphId:String, name:String, scope:String, value:Object", dev: true },

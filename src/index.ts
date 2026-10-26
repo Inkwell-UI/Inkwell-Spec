@@ -1,6 +1,7 @@
 export * from "./graph.js";
 export * from "./ini.js";
 export * from "./ir.js";
+export * from "./localization.js";
 export * from "./menu.js";
 export * from "./overlay.js";
 export * from "./pack.js";

@@ -12,6 +12,13 @@ Every release of a consumer declares the spec version and protocol version it sp
 | 5 | 4 | n/a | `main` | `main` | `main` | n/a | Figma plugin connects by approval in the editor instead of a pasted token. Spec version unchanged. |
 | 5 | 5 | n/a | `main` | `main` | `main` | n/a | Editor can select / focus a layer in Figma (`selectNode`). Spec version unchanged. |
 | 6 | 5 | 1 | `main` | `main` (0.3) | `main` (rebuilt at spec 6) | 0.3.0 (`main`; not seen in game) | Runtime formats (0.3): menu JSON, INI, runtime requirement, saved scope, debug protocol. Figma protocol unchanged. |
+| 7 | 5 | 1 | `feat/localization` | not yet | not yet (rebuild against spec 7) | 0.4.0 for translated menus (not built yet) | Localization (0.4): `localization.json`, `NodeOverlay.locKey` and `.font`, `MenuDef.translations`, translation files, bridge `translate` and `language`. |
+
+## 6 to 7 (localization, 0.4)
+
+- **What changed:** new schema `Localization` (`localization.json`: namespace, source language, languages, entries per key and language) and the pure functions `writeTranslationFile` / `parseTranslationFile` (UTF-16 LE with BOM, `KEY<TAB>text`, the two characters backslash-n for a line break), `entriesFor`, `toCsv` / `fromCsv`, `suggestKey` / `uniqueKey`, `pseudoLocalize`. `NodeOverlay` gains optional `locKey` and `font`; `MenuDef` gains optional `translations` (the mod name of the translation files). The AS2 bridge table gains `language` and `translate(key)`, which need runtime 0.4.0. IR, Figma protocol and runtime protocol are untouched.
+- **Migration:** `migrate()` runs 6->7, a no-op that only bumps `specVersion`.
+- **Who must do what:** the Figma plugin must be rebuilt against spec 7 and move with the editor (`ackHello` refuses a mismatch). Projects saved at spec 6 keep opening. The runtime (C++) mirrors `parseTranslationFile` and the bridge table; shared vectors live in `Inkwell-Runtime/test-vectors/translations/`. A menu that has translated text sets `minRuntime` 0.4.0; one without keeps 0.3.0.
 
 ## 5 to 6 (new formats: Inkwell Runtime, 0.3)
 
