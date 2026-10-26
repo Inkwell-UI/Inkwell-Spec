@@ -111,6 +111,9 @@
     "as2Template": {
       "type": "string"
     },
+    "requiresRuntime": {
+      "type": "boolean"
+    },
     "extra": {
       "type": "object",
       "propertyNames": {

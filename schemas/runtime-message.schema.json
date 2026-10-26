@@ -1,0 +1,450 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "hello"
+        },
+        "token": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "editorVersion": {
+          "type": "string"
+        },
+        "protocolVersion": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "specVersion": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "type",
+        "token",
+        "editorVersion",
+        "protocolVersion",
+        "specVersion"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "subscribe"
+        },
+        "menu": {
+          "type": "string"
+        },
+        "watch": {
+          "default": false,
+          "type": "boolean"
+        },
+        "pins": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "menu"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "unsubscribe"
+        },
+        "menu": {
+          "type": "string"
+        },
+        "watch": {
+          "default": false,
+          "type": "boolean"
+        },
+        "pins": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "menu"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "reload"
+        },
+        "id": {
+          "type": "number"
+        },
+        "menu": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "ping"
+        },
+        "id": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "pong"
+        },
+        "id": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "helloAck"
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "error": {
+          "type": "string",
+          "enum": [
+            "unauthorized",
+            "protocol-mismatch",
+            "busy"
+          ]
+        },
+        "runtimeVersion": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "runtimeVersionString": {
+          "type": "string"
+        },
+        "protocolVersion": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "specVersion": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "gameVersion": {
+          "type": "string"
+        },
+        "menus": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "swf": {
+                "type": "string"
+              },
+              "open": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "name",
+              "swf",
+              "open"
+            ],
+            "additionalProperties": {}
+          }
+        }
+      },
+      "required": [
+        "type",
+        "ok",
+        "runtimeVersion",
+        "runtimeVersionString",
+        "protocolVersion",
+        "specVersion",
+        "gameVersion",
+        "menus"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "menuState"
+        },
+        "menu": {
+          "type": "string"
+        },
+        "open": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "menu",
+        "open"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "trace"
+        },
+        "ts": {
+          "type": "number"
+        },
+        "level": {
+          "type": "string",
+          "enum": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "as2",
+            "runtime"
+          ]
+        },
+        "menu": {
+          "type": "string"
+        },
+        "node": {
+          "type": "string"
+        },
+        "graph": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "ts",
+        "level",
+        "source",
+        "text"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "watch"
+        },
+        "menu": {
+          "type": "string"
+        },
+        "graph": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "component",
+            "menu",
+            "saved"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": [
+            "boolean",
+            "number",
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "menu",
+        "graph",
+        "scope",
+        "name",
+        "value"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "pin"
+        },
+        "menu": {
+          "type": "string"
+        },
+        "node": {
+          "type": "string"
+        },
+        "pin": {
+          "type": "string"
+        },
+        "value": {
+          "type": [
+            "boolean",
+            "number",
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "menu",
+        "node",
+        "pin",
+        "value"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "reloadAck"
+        },
+        "id": {
+          "type": "number"
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "reloaded": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "skipped": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "reason"
+            ],
+            "additionalProperties": {}
+          }
+        },
+        "ms": {
+          "type": "number"
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "ok",
+        "reloaded",
+        "skipped",
+        "ms"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "error"
+        },
+        "code": {
+          "type": "string",
+          "enum": [
+            "unauthorized",
+            "protocol-mismatch",
+            "busy",
+            "bad-message",
+            "unknown-menu",
+            "reload-failed"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "id": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "code",
+        "message"
+      ],
+      "additionalProperties": {}
+    }
+  ]
+}

@@ -17,7 +17,7 @@ TypeScript, Zod schemas, generated JSON Schemas, protocol docs. Published to npm
 
 ## Source files
 
-`src/`: `ir`, `overlay`, `patch`, `protocol`, `hash`, `version` (migrations), `graph` (graph documents), `pack` (manifest, node definitions, `packs.lock`), `pins` (pin types and `pinCompat`).
+`src/`: `ir`, `overlay`, `patch`, `protocol`, `hash`, `version` (migrations), `graph` (graph documents), `pack` (manifest, node definitions, `packs.lock`), `pins` (pin types and `pinCompat`), `menu` (menu JSON `MenuDef`, `MenuSettings`, `normalizeSwfPath`, `MENU_SLOTS`), `ini` (user INI model, `parseIni`, `writeIni`, `writeDefaultModIni`, `resolveMenu`), `runtime` (runtime version packing and messages, AS2 bridge and Papyrus API tables, messaging and co-save constants), `runtimeProtocol` (debug protocol, `RUNTIME_PROTOCOL`, separate from the Figma `PROTOCOL_VERSION`).
 
 ## Rules that are easy to break
 

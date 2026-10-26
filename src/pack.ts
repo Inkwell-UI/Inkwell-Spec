@@ -28,6 +28,7 @@ export const NodeDef = z.looseObject({
   outputs: z.array(PinDef).default([]),
   fields: z.record(z.string(), z.unknown()).default({}), // JSON Schema for the node's fields; converted to Zod at load
   as2Template: z.string().optional(), // path of the template inside the pack
+  requiresRuntime: z.boolean().optional(), // S8: fires/works only with Inkwell Runtime; absent = false. The lint `runtime-required` warns in a HUD widget graph
   extra: Extra,
 });
 export type NodeDef = z.infer<typeof NodeDef>;

@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "menus": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "openKey": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "uiScale": {
+            "type": "number",
+            "minimum": 0.5,
+            "maximum": 2
+          },
+          "offsetX": {
+            "type": "integer",
+            "minimum": -960,
+            "maximum": 960
+          },
+          "offsetY": {
+            "type": "integer",
+            "minimum": -540,
+            "maximum": 540
+          },
+          "theme": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": {}
+      }
+    },
+    "widgets": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "offsetX": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "offsetY": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "scale": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "additionalProperties": {}
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "properties": {
+        "logLevel": {
+          "type": "string",
+          "enum": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error"
+          ]
+        }
+      },
+      "additionalProperties": {}
+    },
+    "dev": {
+      "type": "object",
+      "properties": {
+        "devMode": {
+          "type": "boolean"
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 65535
+        },
+        "token": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "watch": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "extra": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    }
+  },
+  "additionalProperties": {}
+}

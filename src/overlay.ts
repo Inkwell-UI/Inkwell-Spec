@@ -8,6 +8,7 @@ export const NodeOverlay = z.looseObject({
   dataBinding: z.string().optional(),
   scripts: z.array(z.string()).optional(), // graph IDs
   anchor: z.looseObject({ h: z.string().optional(), v: z.string().optional() }).optional(),
+  list: z.looseObject({ itemTemplate: NodeId.optional(), spacing: z.number().optional() }).optional(), // S8, role `list`: item template (default: first child) and row spacing
   themable: z.record(z.string(), z.boolean()).optional(), // runtime-themable flags per property
 });
 

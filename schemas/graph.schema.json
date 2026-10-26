@@ -165,7 +165,8 @@
             "type": "string",
             "enum": [
               "component",
-              "menu"
+              "menu",
+              "saved"
             ]
           },
           "default": {},

@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "specVersion": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]{1,63}$"
+    },
+    "swf": {
+      "type": "string"
+    },
+    "flags": {
+      "default": {
+        "pausesGame": false,
+        "cursor": false,
+        "modal": false,
+        "closeOnEscape": true
+      },
+      "type": "object",
+      "properties": {
+        "pausesGame": {
+          "default": false,
+          "type": "boolean"
+        },
+        "cursor": {
+          "default": false,
+          "type": "boolean"
+        },
+        "modal": {
+          "default": false,
+          "type": "boolean"
+        },
+        "closeOnEscape": {
+          "default": true,
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "inputContext": {
+      "type": "string",
+      "enum": [
+        "none",
+        "menuMode"
+      ]
+    },
+    "depth": {
+      "default": 3,
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 15
+    },
+    "triggers": {
+      "default": {
+        "papyrus": true
+      },
+      "type": "object",
+      "properties": {
+        "hotkey": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 255
+        },
+        "papyrus": {
+          "default": true,
+          "type": "boolean"
+        },
+        "modEvent": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_]{1,64}$"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "userDefaults": {
+      "type": "object",
+      "properties": {
+        "uiScale": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2
+        },
+        "offsetX": {
+          "type": "integer",
+          "minimum": -960,
+          "maximum": 960
+        },
+        "offsetY": {
+          "type": "integer",
+          "minimum": -540,
+          "maximum": 540
+        },
+        "theme": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "extra": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    }
+  },
+  "required": [
+    "specVersion"
+  ],
+  "additionalProperties": {}
+}

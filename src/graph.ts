@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { PinType } from "./pins.js";
+import { SAVED_TYPES } from "./runtime.js";
 
 const Id = z.string().min(1);
 /** `packId/nodeKind@major`, e.g. `core/Branch@1`. */
@@ -15,9 +16,11 @@ export const GraphNode = z.looseObject({
 const Endpoint = z.looseObject({ node: Id, pin: z.string().min(1) });
 export const GraphEdge = z.looseObject({ from: Endpoint, to: Endpoint, extra: Extra });
 export const GraphVariable = z.looseObject({
-  id: Id, name: z.string(), type: PinType.exclude(["Exec"]), scope: z.enum(["component", "menu"]).default("menu"),
+  id: Id, name: z.string(), type: PinType.exclude(["Exec"]), scope: z.enum(["component", "menu", "saved"]).default("menu"),
   default: z.unknown().optional(), extra: Extra,
-});
+}).refine((v) => v.scope !== "saved" || (SAVED_TYPES as readonly string[]).includes(v.type), {
+  path: ["type"], message: "a saved variable must be Bool, Number or String",
+}); // saved: spec 6, S5. Other saved rules (menu graph of a custom menu, unique names) are lint, not schema.
 export const GraphComment = z.looseObject({ id: Id, text: z.string(), pos: Pos, size: Size.optional(), extra: Extra });
 export const GraphGroup = z.looseObject({
   id: Id, name: z.string(), nodes: z.array(Id).default([]), pos: Pos, size: Size.optional(), extra: Extra,

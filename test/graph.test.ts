@@ -25,8 +25,15 @@ describe("graph", () => {
     expect(Graph.safeParse({ ...graph(), variables: [{ id: "v", name: "x", type: "Exec" }] }).success).toBe(false);
     expect(Graph.safeParse({ ...graph(), edges: [{ from: { node: "a" }, to: { node: "b", pin: "p" } }] }).success).toBe(false);
   });
-  it("migrates 4 -> 5 unchanged", () => {
-    expect(migrate({ specVersion: 4, a: 1 } as any)).toEqual({ specVersion: 5, a: 1 });
+  it("migrates 4 -> 5 -> 6 unchanged", () => {
+    expect(migrate({ specVersion: 4, a: 1 } as any)).toEqual({ specVersion: 6, a: 1 });
+    expect(migrate({ specVersion: 5, a: 1 } as any)).toEqual({ specVersion: 6, a: 1 });
+  });
+  it("saved scope: Bool, Number, String only", () => {
+    const v = (type: string, scope = "saved") => ({ ...graph(), variables: [{ id: "v", name: "x", type, scope, keep: 1 }] });
+    for (const t of ["Bool", "Number", "String"]) expect(Graph.parse(v(t)).variables[0]).toMatchObject({ scope: "saved", type: t, keep: 1 });
+    for (const t of ["Array", "Object", "Text", "List", "Image"]) expect(Graph.safeParse(v(t)).success, t).toBe(false);
+    expect(Graph.safeParse(v("Array", "menu")).success).toBe(true);
   });
 });
 

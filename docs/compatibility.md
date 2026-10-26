@@ -2,15 +2,23 @@
 
 Every release of a consumer declares the spec version and protocol version it speaks; the editor checks both on connect. Update this table whenever a format changes (see CLAUDE.md: breaking changes need a compatibility note).
 
-| Spec version | Protocol version | `@inkwell-ui/spec` | Editor | Figma plugin | Runtime | Notes |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | 1 | `main` | `main` (0.1 work in progress) | `main` | n/a | First IR. Text layout hints lived in `extra.text`. |
-| 2 | 1 | `main` | `main` | `main` | n/a | Text node gains `align`, `verticalAlign`, `lineHeight`, `letterSpacing`, `textFit`, `truncate`. |
-| 3 | 2 | `main` | `main` | `main` | n/a | One SWF per top-level Figma frame; alias `FontRef.styleName`. |
-| 4 | 3 | `main` | `main` | `main` | n/a | Images: image fill `opacity`, Frame `fills`, Image `fillOpacity`; `asset` / `needAssets` messages. |
-| 5 | 3 | `main` | `main` | `main` | n/a | New graph, node pack and `packs.lock` formats (visual scripting, 0.2). IR and protocol unchanged. |
-| 5 | 4 | `main` | `main` | `main` | n/a | Figma plugin connects by approval in the editor instead of a pasted token. Spec version unchanged. |
-| 5 | 5 | `main` | `main` | `main` | n/a | Editor can select / focus a layer in Figma (`selectNode`). Spec version unchanged. |
+| Spec version | Protocol version (Figma) | Runtime protocol | `@inkwell-ui/spec` | Editor | Figma plugin | Runtime | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 1 | n/a | `main` | `main` (0.1 work in progress) | `main` | n/a | First IR. Text layout hints lived in `extra.text`. |
+| 2 | 1 | n/a | `main` | `main` | `main` | n/a | Text node gains `align`, `verticalAlign`, `lineHeight`, `letterSpacing`, `textFit`, `truncate`. |
+| 3 | 2 | n/a | `main` | `main` | `main` | n/a | One SWF per top-level Figma frame; alias `FontRef.styleName`. |
+| 4 | 3 | n/a | `main` | `main` | `main` | n/a | Images: image fill `opacity`, Frame `fills`, Image `fillOpacity`; `asset` / `needAssets` messages. |
+| 5 | 3 | n/a | `main` | `main` | `main` | n/a | New graph, node pack and `packs.lock` formats (visual scripting, 0.2). IR and protocol unchanged. |
+| 5 | 4 | n/a | `main` | `main` | `main` | n/a | Figma plugin connects by approval in the editor instead of a pasted token. Spec version unchanged. |
+| 5 | 5 | n/a | `main` | `main` | `main` | n/a | Editor can select / focus a layer in Figma (`selectNode`). Spec version unchanged. |
+| 6 | 5 | 1 | `feat/runtime-formats` | not yet (rebuild at spec 6) | not yet (rebuild at spec 6) | 0.3.0 (planned) | Runtime formats (0.3): menu JSON, INI, runtime requirement, saved scope, debug protocol. Figma protocol unchanged. |
+
+## 5 to 6 (new formats: Inkwell Runtime, 0.3)
+
+- **What changed:** new schemas `MenuDef` (menu JSON), `MenuSettings` (`swfs/<name>/menu.json`), `RuntimeIni` (user INI model, plus the pure `parseIni` / `writeIni` / `writeDefaultModIni` / `resolveMenu`), `RuntimeMessage` (debug protocol), and runtime constants (version packing, AS2 bridge and Papyrus API tables, messaging and co-save constants, `MENU_SLOTS` = 16). `GraphVariable.scope` gains `saved` (Bool, Number, String only), `NodeDef` gains optional `requiresRuntime`, `NodeOverlay` gains optional `list`. IR and the Figma protocol are untouched.
+- **Runtime protocol:** new constant `RUNTIME_PROTOCOL` = 1 (`src/runtimeProtocol.ts`), separate from the Figma `PROTOCOL_VERSION` (stays 5). Editor and runtime must match it exactly.
+- **Migration:** `migrate()` runs 5->6, a no-op that only bumps `specVersion`.
+- **Who must do what:** `hello` carries `specVersion` and `ackHello` refuses a mismatch, so the Figma plugin must be rebuilt against spec 6 and move together with the editor. Editor and Figma tests that hard-code 5 must follow `SPEC_VERSION`. Projects saved at spec 5 keep opening (migration). The runtime (C++) mirrors `parseIni`, the bridge and Papyrus tables, and the co-save constants.
 
 ## 4 to 5 (protocol): selectNode
 

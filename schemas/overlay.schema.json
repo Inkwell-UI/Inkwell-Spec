@@ -60,6 +60,18 @@
             },
             "additionalProperties": {}
           },
+          "list": {
+            "type": "object",
+            "properties": {
+              "itemTemplate": {
+                "type": "string"
+              },
+              "spacing": {
+                "type": "number"
+              }
+            },
+            "additionalProperties": {}
+          },
           "themable": {
             "type": "object",
             "propertyNames": {
