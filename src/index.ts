@@ -11,3 +11,4 @@ export * from "./protocol.js";
 export * from "./runtime.js";
 export * from "./runtimeProtocol.js";
 export * from "./version.js";
+export * from "./themes.js";
