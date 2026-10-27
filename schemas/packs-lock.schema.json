@@ -21,13 +21,12 @@
             "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$"
           },
           "source": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^https:\\/\\/github\\.com\\/[^\\s]+$"
           },
-          "commit": {
-            "type": "string"
-          },
-          "hash": {
-            "type": "string"
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
           },
           "extra": {
             "type": "object",
@@ -41,8 +40,7 @@
           "id",
           "version",
           "source",
-          "commit",
-          "hash"
+          "sha256"
         ],
         "additionalProperties": {}
       }

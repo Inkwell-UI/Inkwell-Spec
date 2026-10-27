@@ -14,12 +14,19 @@ Every release of a consumer declares the spec version and protocol version it sp
 | 6 | 5 | 1 | `main` | `main` (0.3) | `main` (rebuilt at spec 6) | 0.3.0 (`main`; not seen in game) | Runtime formats (0.3): menu JSON, INI, runtime requirement, saved scope, debug protocol. Figma protocol unchanged. |
 | 7 | 5 | 1 | `feat/localization` | not yet | not yet (rebuild against spec 7) | 0.4.0 for translated menus (not built yet) | Localization (0.4): `localization.json`, `NodeOverlay.locKey` and `.font`, `MenuDef.translations`, translation files, bridge `translate` and `language`. |
 | 8 | 5 | 1 | `feat/contracts-05` | `feat/contracts-05` (0.5) | not yet (rebuild against spec 8) | unchanged | Contracts (0.5, W5): IR `target.base` replaced by `target.layers`. |
+| 8 | 5 | 1 | `main` | `main` (0.5) | unchanged | unchanged | Packs (0.5, SPEC-CHANGES W1/W2): `packs.lock` entries become `{id, version, source, sha256}`; new `PackIndex`, `PACK_ASSET`, `packAssetUrl`, `parsePacksLock` / `writePacksLock`. Spec version unchanged. |
 
 ## 7 to 8 (contracts, 0.5)
 
 - **What changed:** the IR `target` of a menu replacement drops `base` (`"vanilla"` | `"skyui"`) and gains `layers`, the contract layers the SWF is built for, engine first (`["engine"]`, `["engine", "skyui52"]`, ...). Absent means `["engine"]`. The names are strings, not an enum, so a newer layer name survives a round trip; the editor lints unknown names, duplicates and a list that does not start with `engine`.
 - **Migration:** `migrate()` runs 7->8 (`baseToLayers`): `base: "skyui"` -> `layers: ["engine", "skyui52", "skyui6"]`, `base: "vanilla"` -> `["engine"]`; a target without `base` keeps its keys. Nothing else is rewritten.
 - **Who must do what:** the Figma plugin must be rebuilt against spec 8 (`ackHello` refuses a mismatch; it never sends a target, so no code change). The runtime only logs a spec mismatch and is not affected. Projects saved at spec 7 keep opening.
+
+## Packs lockfile and index (0.5, no version bump)
+
+- **What changed:** `PacksLock` entries drop `commit` and `hash` and require `sha256` (64 lower-case hex digits of the release asset) and a `source` on `https://github.com/`; ids are unique. New `PackIndex` (`index.json` of Inkwell-Packs-Index: `{packs: [{id, repo, latest, description?, deprecated?}]}`, sorted by id), generated as `schemas/pack-index.schema.json`. A pack release is the asset `pack.zip` on the tag `v<version>` (`packAssetUrl`).
+- **Why no version bump:** the IR, overlay and protocols are untouched, and no tool ever wrote a `packs.lock` in the old shape (the editor kept it as raw text; the samples held the placeholder `packs: []`, now JSON). Built at spec 7 and landed after spec 8: a `packs.lock` records the spec in force when written (8 now), and any `specVersion` parses.
+- **Who must do what:** the editor reads and writes `packs.lock` through `parsePacksLock` / `writePacksLock`; a lockfile that does not parse is never overwritten.
 
 ## 6 to 7 (localization, 0.4)
 
