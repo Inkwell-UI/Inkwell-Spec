@@ -24,7 +24,7 @@ type N = Swf["nodes"][string];
 function setBound(n: N, key: string, value: unknown): N {
   const solid = (f: unknown) => !!f && (f as { type?: string }).type === "solid";
   const m = /^(fills|strokes)\/(\d+)\/color$/.exec(key);
-  if (key === "opacity") return { ...n, opacity: value as number };
+  if (key === "opacity") return { ...n, opacity: Math.min(1, Math.max(0, (value as number) / 100)) }; // a Figma opacity variable is 0 to 100
   if (key === "visible") return { ...n, visible: value as boolean };
   if (key === "transform/width" || key === "transform/height") return { ...n, transform: { ...n.transform, [key.slice(10)]: value as number } };
   if (m && (n.type === "frame" || n.type === "shape")) {

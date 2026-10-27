@@ -36,7 +36,7 @@ describe("applyTheme", () => {
     variables: {
       A: { name: "accent", type: "color", values: { Vanilla: { r: 1, g: 1, b: 1 }, Nordic: { r: 0, g: 0, b: 1 } } },
       S: { name: "size", type: "number", values: { Vanilla: 20, Nordic: 30 } },
-      O: { name: "alpha", type: "number", values: { Vanilla: 1, Nordic: 0.5 } },
+      O: { name: "alpha", type: "number", values: { Vanilla: 100, Nordic: 50 } },
       V: { name: "show", type: "boolean", values: { Vanilla: true, Nordic: false } },
     },
   };
