@@ -29,12 +29,39 @@
               },
               "overrides": {
                 "type": "object",
-                "propertyNames": {
-                  "type": "string"
+                "properties": {
+                  "up": {
+                    "type": "string"
+                  },
+                  "down": {
+                    "type": "string"
+                  },
+                  "left": {
+                    "type": "string"
+                  },
+                  "right": {
+                    "type": "string"
+                  }
                 },
-                "additionalProperties": {
-                  "type": "string"
-                }
+                "additionalProperties": {}
+              }
+            },
+            "additionalProperties": {}
+          },
+          "prompt": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string"
+              },
+              "keyboard": {
+                "type": "string"
+              },
+              "xbox": {
+                "type": "string"
+              },
+              "playstation": {
+                "type": "string"
               }
             },
             "additionalProperties": {}

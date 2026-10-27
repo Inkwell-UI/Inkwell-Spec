@@ -1,4 +1,5 @@
 export * from "./contract.js";
+export * from "./focus.js";
 export * from "./graph.js";
 export * from "./ini.js";
 export * from "./ir.js";

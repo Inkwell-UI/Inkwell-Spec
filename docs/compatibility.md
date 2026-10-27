@@ -15,12 +15,19 @@ Every release of a consumer declares the spec version and protocol version it sp
 | 7 | 5 | 1 | `feat/localization` | not yet | not yet (rebuild against spec 7) | 0.4.0 for translated menus (not built yet) | Localization (0.4): `localization.json`, `NodeOverlay.locKey` and `.font`, `MenuDef.translations`, translation files, bridge `translate` and `language`. |
 | 8 | 5 | 1 | `feat/contracts-05` | `feat/contracts-05` (0.5) | not yet (rebuild against spec 8) | unchanged | Contracts (0.5, W5): IR `target.base` replaced by `target.layers`. |
 | 8 | 5 | 1 | `main` | `main` (0.5) | unchanged | unchanged | Packs (0.5, SPEC-CHANGES W1/W2): `packs.lock` entries become `{id, version, source, sha256}`; new `PackIndex`, `PACK_ASSET`, `packAssetUrl`, `parsePacksLock` / `writePacksLock`. Spec version unchanged. |
+| 8 | 5 | 1 | `feat/gamepad-05` | `feat/gamepad-05` (0.5) | unchanged | unchanged | Focus graph and prompts (0.5, W3/W4): `NodeOverlay.focus` typed (`order`, `overrides.up/down/left/right`), new `NodeOverlay.prompt`, `focusGraph`, `resolvePrompt`. Spec version unchanged. |
 
 ## 7 to 8 (contracts, 0.5)
 
 - **What changed:** the IR `target` of a menu replacement drops `base` (`"vanilla"` | `"skyui"`) and gains `layers`, the contract layers the SWF is built for, engine first (`["engine"]`, `["engine", "skyui52"]`, ...). Absent means `["engine"]`. The names are strings, not an enum, so a newer layer name survives a round trip; the editor lints unknown names, duplicates and a list that does not start with `engine`.
 - **Migration:** `migrate()` runs 7->8 (`baseToLayers`): `base: "skyui"` -> `layers: ["engine", "skyui52", "skyui6"]`, `base: "vanilla"` -> `["engine"]`; a target without `base` keeps its keys. Nothing else is rewritten.
 - **Who must do what:** the Figma plugin must be rebuilt against spec 8 (`ackHello` refuses a mismatch; it never sends a target, so no code change). The runtime only logs a spec mismatch and is not affected. Projects saved at spec 7 keep opening.
+
+## Focus graph and prompts (0.5, W3/W4, no version bump)
+
+- **What changed:** `NodeOverlay.focus` keeps its 0.1 shape (`{order?, overrides?}`) but `overrides` is now a loose object with optional `up`, `down`, `left`, `right` node ids (other keys are kept, not validated; the editor warns `focus-direction-unknown`). New optional `NodeOverlay.prompt` `{action?, keyboard?, xbox?, playstation?}` (loose). New `focusGraph(nodes, exists)` (order, moves with defaults, issues `focus-unreachable`, `focus-dead-end`, `focus-target-missing`, `focus-node-missing`, `focus-direction-unknown`) and `resolvePrompt`, `PROMPT_DEFAULTS`, `XBOX_GLYPHS`, `PS_GLYPHS`, `KEY_LABEL`.
+- **Why no version bump:** every field is optional and every overlay written before parses unchanged (like Themes); the IR and both protocols are untouched, so the Figma plugin needs no rebuild.
+- **Who must do what:** nothing for old projects. An older editor keeps `prompt` and the focus data as unknown keys.
 
 ## Packs lockfile and index (0.5, no version bump)
 

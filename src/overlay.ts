@@ -1,10 +1,12 @@
 import { z } from "zod";
 import { NodeId } from "./ir.js";
+import { FocusOverlay, PromptOverlay } from "./focus.js";
 
 export const NodeOverlay = z.looseObject({
   role: z.string().optional(), // button, list, progress, text...
   instanceName: z.string().optional(),
-  focus: z.looseObject({ order: z.number().optional(), overrides: z.record(z.string(), NodeId).optional() }).optional(),
+  focus: FocusOverlay.optional(), // W3: gamepad focus order and up/down/left/right overrides
+  prompt: PromptOverlay.optional(), // W4: role `prompt`: the action and glyphs per device
   dataBinding: z.string().optional(),
   scripts: z.array(z.string()).optional(), // graph IDs
   anchor: z.looseObject({ h: z.string().optional(), v: z.string().optional() }).optional(),
