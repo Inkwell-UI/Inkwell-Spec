@@ -13,6 +13,13 @@ Every release of a consumer declares the spec version and protocol version it sp
 | 5 | 5 | n/a | `main` | `main` | `main` | n/a | Editor can select / focus a layer in Figma (`selectNode`). Spec version unchanged. |
 | 6 | 5 | 1 | `main` | `main` (0.3) | `main` (rebuilt at spec 6) | 0.3.0 (`main`; not seen in game) | Runtime formats (0.3): menu JSON, INI, runtime requirement, saved scope, debug protocol. Figma protocol unchanged. |
 | 7 | 5 | 1 | `feat/localization` | not yet | not yet (rebuild against spec 7) | 0.4.0 for translated menus (not built yet) | Localization (0.4): `localization.json`, `NodeOverlay.locKey` and `.font`, `MenuDef.translations`, translation files, bridge `translate` and `language`. |
+| 8 | 5 | 1 | `feat/contracts-05` | `feat/contracts-05` (0.5) | not yet (rebuild against spec 8) | unchanged | Contracts (0.5, W5): IR `target.base` replaced by `target.layers`. |
+
+## 7 to 8 (contracts, 0.5)
+
+- **What changed:** the IR `target` of a menu replacement drops `base` (`"vanilla"` | `"skyui"`) and gains `layers`, the contract layers the SWF is built for, engine first (`["engine"]`, `["engine", "skyui52"]`, ...). Absent means `["engine"]`. The names are strings, not an enum, so a newer layer name survives a round trip; the editor lints unknown names, duplicates and a list that does not start with `engine`.
+- **Migration:** `migrate()` runs 7->8 (`baseToLayers`): `base: "skyui"` -> `layers: ["engine", "skyui52", "skyui6"]`, `base: "vanilla"` -> `["engine"]`; a target without `base` keeps its keys. Nothing else is rewritten.
+- **Who must do what:** the Figma plugin must be rebuilt against spec 8 (`ackHello` refuses a mismatch; it never sends a target, so no code change). The runtime only logs a spec mismatch and is not affected. Projects saved at spec 7 keep opening.
 
 ## 6 to 7 (localization, 0.4)
 

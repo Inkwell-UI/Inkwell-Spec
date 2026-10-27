@@ -27,12 +27,11 @@
         "contract": {
           "type": "string"
         },
-        "base": {
-          "type": "string",
-          "enum": [
-            "vanilla",
-            "skyui"
-          ]
+        "layers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [

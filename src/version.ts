@@ -1,5 +1,5 @@
 /** Bump on every IR/overlay change and add a Migration from the previous version. */
-export const SPEC_VERSION = 7;
+export const SPEC_VERSION = 8;
 
 export type Migration = { from: number; to: number; fn: (doc: any) => any };
 
@@ -40,8 +40,19 @@ export const noop = (doc: any): any => doc;
 
 /** 6 -> 7 (localization, V7): NodeOverlay.locKey and .font, the Localization schema (`localization.json`), MenuDef.translations. All optional or new: nothing to rewrite. */
 
+/**
+ * 7 -> 8 (contracts, W5): `target.base` ("vanilla" | "skyui") is replaced by `target.layers`, the contract layers a menu replacement is built for.
+ * "skyui" meant "check SkyUI 5.2 and 6 too" -> ["engine", "skyui52", "skyui6"]; "vanilla" -> ["engine"]. A target without `base` is left as it is.
+ */
+export function baseToLayers(doc: any): any {
+  const t = doc?.target;
+  if (!t || typeof t !== "object" || !("base" in t)) return doc;
+  const { base, ...rest } = t;
+  return { ...doc, target: { ...rest, layers: rest.layers ?? (base === "skyui" ? ["engine", "skyui52", "skyui6"] : ["engine"]) } };
+}
+
 /** Ordered chain. */
-export const MIGRATIONS: Migration[] = [{ from: 1, to: 2, fn: textLayoutToFields }, { from: 2, to: 3, fn: noop }, { from: 3, to: 4, fn: noop }, { from: 4, to: 5, fn: noop }, { from: 5, to: 6, fn: noop }, { from: 6, to: 7, fn: noop }];
+export const MIGRATIONS: Migration[] = [{ from: 1, to: 2, fn: textLayoutToFields }, { from: 2, to: 3, fn: noop }, { from: 3, to: 4, fn: noop }, { from: 4, to: 5, fn: noop }, { from: 5, to: 6, fn: noop }, { from: 6, to: 7, fn: noop }, { from: 7, to: 8, fn: baseToLayers }];
 
 /** Runs migrations in order until doc.specVersion reaches target. Throws on newer or unreachable versions. */
 export function migrate(

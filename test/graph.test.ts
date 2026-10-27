@@ -25,9 +25,9 @@ describe("graph", () => {
     expect(Graph.safeParse({ ...graph(), variables: [{ id: "v", name: "x", type: "Exec" }] }).success).toBe(false);
     expect(Graph.safeParse({ ...graph(), edges: [{ from: { node: "a" }, to: { node: "b", pin: "p" } }] }).success).toBe(false);
   });
-  it("migrates 4 -> 5 -> 6 -> 7 unchanged", () => {
-    expect(migrate({ specVersion: 4, a: 1 } as any)).toEqual({ specVersion: 7, a: 1 });
-    expect(migrate({ specVersion: 5, a: 1 } as any)).toEqual({ specVersion: 7, a: 1 });
+  it("migrates 4 -> ... -> 8 unchanged (a graph has no target)", () => {
+    expect(migrate({ specVersion: 4, a: 1 } as any)).toEqual({ specVersion: 8, a: 1 });
+    expect(migrate({ specVersion: 5, a: 1 } as any)).toEqual({ specVersion: 8, a: 1 });
   });
   it("saved scope: Bool, Number, String only", () => {
     const v = (type: string, scope = "saved") => ({ ...graph(), variables: [{ id: "v", name: "x", type, scope, keep: 1 }] });

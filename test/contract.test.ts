@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { checkContract, ContractLayer, mergeContract, type ContractEntry } from "../src/index.js";
+import { checkContract, ContractLayer, mergeContract, migrate, Swf, SPEC_VERSION, type ContractEntry } from "../src/index.js";
 
 const dir = new URL("../contracts/InventoryMenu/", import.meta.url);
 const inventory = readdirSync(dir).map((f) => ContractLayer.parse(JSON.parse(readFileSync(new URL(f, dir), "utf8"))));
@@ -85,5 +85,18 @@ describe("checkContract", () => {
   it("checks the SkyUI 5.2 globals only when that layer is targeted", () => {
     expect(checkContract(mergeContract(inventory, ["engine", "skyui52"]), full)).toHaveLength(8);
     expect(checkContract(mergeContract(inventory, ["engine", "skyui6"]), full)).toEqual([]);
+  });
+});
+
+describe("IR target.layers (spec 8)", () => {
+  const ir = (target: object, specVersion = 7) => ({ specVersion, id: "s", name: "S", target, stage: { width: 1, height: 1 }, root: "r", nodes: {} });
+  it("7 -> 8 replaces base by layers; no base is left alone", () => {
+    expect(SPEC_VERSION).toBe(8);
+    expect(migrate(ir({ kind: "menuReplacement", contract: "InventoryMenu", base: "skyui" })).target).toEqual({ kind: "menuReplacement", contract: "InventoryMenu", layers: ["engine", "skyui52", "skyui6"] });
+    expect(migrate(ir({ kind: "menuReplacement", base: "vanilla" })).target).toEqual({ kind: "menuReplacement", layers: ["engine"] });
+    expect(migrate(ir({ kind: "customMenu" })).target).toEqual({ kind: "customMenu" });
+  });
+  it("layers parse as strings, so a future layer name survives", () => {
+    expect(Swf.parse(ir({ kind: "menuReplacement", layers: ["engine", "skyui7"] }, 8)).target.layers).toEqual(["engine", "skyui7"]);
   });
 });

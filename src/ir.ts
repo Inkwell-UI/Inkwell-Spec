@@ -169,8 +169,10 @@ export const Swf = obj({
   name: z.string(),
   target: obj({
     kind: z.enum(["hudWidget", "customMenu", "menuReplacement"]),
-    contract: z.string().optional(),
-    base: z.enum(["vanilla", "skyui"]).optional(),
+    contract: z.string().optional(), // menuReplacement: the engine menu whose contract applies, e.g. "InventoryMenu" (contracts/<menu>/)
+    // menuReplacement (spec 8, W5): contract layers the SWF is built for, engine first, e.g. ["engine", "skyui52"]; absent = ["engine"].
+    // Strings, not an enum, so a layer name from a newer spec survives a round trip; the editor lints unknown names and the order.
+    layers: z.array(z.string()).optional(),
   }),
   stage: obj({ width: z.number(), height: z.number() }),
   root: NodeId,

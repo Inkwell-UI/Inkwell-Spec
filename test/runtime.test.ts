@@ -16,15 +16,15 @@ const menu = () => ({
 
 describe("constants and versions", () => {
   it("spec 6, separate protocols", () => {
-    expect(SPEC_VERSION).toBe(7);
+    expect(SPEC_VERSION).toBe(8);
     expect(PROTOCOL_VERSION).toBe(5);
     expect(RUNTIME_PROTOCOL).toBe(1);
     expect(MENU_SLOTS).toBe(16);
     expect(MENU_WARN_THRESHOLD).toBe(4);
     expect(COSAVE_UNIQUE_ID).toBe(0x494e4b57);
     expect(COSAVE_RECORD_SAVED).toBe(0x53564152);
-    expect(migrate({ specVersion: 5, k: 1 } as any)).toEqual({ specVersion: 7, k: 1 });
-    expect(migrate({ specVersion: 6, k: 1 } as any)).toEqual({ specVersion: 7, k: 1 });
+    expect(migrate({ specVersion: 5, k: 1 } as any)).toEqual({ specVersion: 8, k: 1 });
+    expect(migrate({ specVersion: 6, k: 1 } as any)).toEqual({ specVersion: 8, k: 1 });
   });
   it("packs like S3", () => {
     expect(packVersion("0.3.0")).toBe(196608);

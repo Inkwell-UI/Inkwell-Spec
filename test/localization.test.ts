@@ -28,8 +28,8 @@ describe("Localization schema", () => {
     const m = MenuDef.parse({ specVersion: 7, name: "My_Menu", swf: "Interface/Inkwell/My/Menu.swf", translations: "My" });
     expect(m.translations).toBe("My");
     expect(() => MenuDef.parse({ specVersion: 7, name: "My_Menu", swf: "Interface/Inkwell/My/Menu.swf", translations: "bad name" })).toThrow();
-    expect(SPEC_VERSION).toBe(7);
-    expect(migrate({ specVersion: 6 })).toEqual({ specVersion: 7 });
+    expect(SPEC_VERSION).toBeGreaterThanOrEqual(7);
+    expect(migrate({ specVersion: 6 }, { target: 7 })).toEqual({ specVersion: 7 });
     expect(BRIDGE_MEMBERS.find((b) => b.name === "translate")?.params).toBe("key:String");
     expect(BRIDGE_MEMBERS.find((b) => b.name === "language")?.kind).toBe("property");
     expect(translationPath("My", "GERMAN")).toBe("Interface/Translations/My_GERMAN.txt");
