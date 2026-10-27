@@ -18,7 +18,7 @@
           },
           "uiScale": {
             "type": "number",
-            "minimum": 0.5,
+            "minimum": 0.2,
             "maximum": 2
           },
           "offsetX": {

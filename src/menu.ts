@@ -13,7 +13,7 @@ export const MOD_EVENT_NAME = /^[A-Za-z0-9_]{1,64}$/;
 export const HOTKEY_RANGE = { min: 2, max: 255 } as const; // 1 (Escape) is reserved
 export const DEPTH_RANGE = { min: 0, max: 15 } as const;
 export const INPUT_CONTEXTS = ["none", "menuMode"] as const;
-export const UI_SCALE_RANGE = { min: 0.5, max: 2 } as const;
+export const UI_SCALE_RANGE = { min: 0.2, max: 2 } as const;
 export const OFFSET_X_RANGE = { min: -960, max: 960 } as const;
 export const OFFSET_Y_RANGE = { min: -540, max: 540 } as const;
 

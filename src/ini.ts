@@ -165,7 +165,7 @@ export function writeDefaultModIni(opts: { modName: string; modId: string; menus
     const on = (differs: boolean) => (differs ? "" : ";");
     out.push("", `[Menu.${m.name}]`,
       "; Key that opens the menu: DirectInput scan code (K is 37). 0 = no hotkey.", `;OpenKey=${m.hotkey ?? 0}`,
-      "; Menu size, 0.50 to 2.00.", `${on(u.uiScale !== undefined && u.uiScale !== INI_DEFAULTS.uiScale)}UIScale=${f2(u.uiScale ?? INI_DEFAULTS.uiScale)}`,
+      "; Menu size, 0.20 to 2.00.", `${on(u.uiScale !== undefined && u.uiScale !== INI_DEFAULTS.uiScale)}UIScale=${f2(u.uiScale ?? INI_DEFAULTS.uiScale)}`,
       "; Move the menu, in pixels of a 1920x1080 screen.",
       `${on((u.offsetX ?? 0) !== 0)}OffsetX=${u.offsetX ?? 0}`, `${on((u.offsetY ?? 0) !== 0)}OffsetY=${u.offsetY ?? 0}`,
       "; Theme name: a mode of the menu's Figma variable collection (for example Vanilla). Empty = the menu's default.", `${on(!!u.theme)}Theme=${u.theme ?? ""}`);
