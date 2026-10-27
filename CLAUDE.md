@@ -17,7 +17,7 @@ TypeScript, Zod schemas, generated JSON Schemas, protocol docs. Published to npm
 
 ## Source files
 
-`src/`: `ir`, `overlay`, `patch`, `protocol`, `hash`, `version` (migrations), `graph` (graph documents), `pack` (manifest, node definitions, `packs.lock`), `pins` (pin types and `pinCompat`), `menu` (menu JSON `MenuDef`, `MenuSettings`, `normalizeSwfPath`, `MENU_SLOTS`), `ini` (user INI model, `parseIni`, `writeIni`, `writeDefaultModIni`, `resolveMenu`), `runtime` (runtime version packing and messages, AS2 bridge and Papyrus API tables, messaging and co-save constants), `runtimeProtocol` (debug protocol, `RUNTIME_PROTOCOL`, separate from the Figma `PROTOCOL_VERSION`).
+`src/`: `ir`, `overlay`, `patch`, `protocol`, `hash`, `version` (migrations), `graph` (graph documents), `pack` (manifest, node definitions, `packs.lock`), `pins` (pin types and `pinCompat`), `menu` (menu JSON `MenuDef`, `MenuSettings`, `normalizeSwfPath`, `MENU_SLOTS`), `ini` (user INI model, `parseIni`, `writeIni`, `writeDefaultModIni`, `resolveMenu`), `runtime` (runtime version packing and messages, AS2 bridge and Papyrus API tables, messaging and co-save constants), `runtimeProtocol` (debug protocol, `RUNTIME_PROTOCOL`, separate from the Figma `PROTOCOL_VERSION`), `localization` (0.4: the project table, `$KEY` rules, Skyrim translation file text, pseudo-localization) and `themes` (0.4: Figma variable collections as `Swf.themes`, binding keys, `applyTheme`).
 
 ## Rules that are easy to break
 
@@ -30,4 +30,5 @@ TypeScript, Zod schemas, generated JSON Schemas, protocol docs. Published to npm
 - **Text is an array of style runs,** even while 0.1 allows only one run.
 - **No diagnostics in the IR.** Issues are derived, never stored.
 - **Menu JSON `swf` is relative to `Data/` including `Interface/` and `.swf`;** the runtime normalizes it for the engine. Contract entries record whether `required` is proven or only inferred.
+- **Mod ids are letters and digits only,** starting with a letter (no `_`, no space): the id becomes a Papyrus script name and part of file and class names. The editor cleans an id by removing bad characters (`Editor src/shared/modId.ts`); anything that takes an id from outside should do the same.
 - **Breaking changes need a compatibility note** listing which consumer versions speak which spec version.
