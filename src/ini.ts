@@ -168,7 +168,7 @@ export function writeDefaultModIni(opts: { modName: string; modId: string; menus
       "; Menu size, 0.50 to 2.00.", `${on(u.uiScale !== undefined && u.uiScale !== INI_DEFAULTS.uiScale)}UIScale=${f2(u.uiScale ?? INI_DEFAULTS.uiScale)}`,
       "; Move the menu, in pixels of a 1920x1080 screen.",
       `${on((u.offsetX ?? 0) !== 0)}OffsetX=${u.offsetX ?? 0}`, `${on((u.offsetY ?? 0) !== 0)}OffsetY=${u.offsetY ?? 0}`,
-      "; Theme name (reserved; themes arrive in a later version).", `${on(!!u.theme)}Theme=${u.theme ?? ""}`);
+      "; Theme name: a mode of the menu's Figma variable collection (for example Vanilla). Empty = the menu's default.", `${on(!!u.theme)}Theme=${u.theme ?? ""}`);
   }
   return out.join("\n") + "\n";
 }
