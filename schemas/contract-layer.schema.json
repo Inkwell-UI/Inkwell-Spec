@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "menu": {
+      "type": "string",
+      "minLength": 1
+    },
+    "layer": {
+      "type": "string",
+      "enum": [
+        "engine",
+        "skyui52",
+        "skyui6",
+        "mod"
+      ]
+    },
+    "mod": {
+      "type": "string"
+    },
+    "swf": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "sources": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]+$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "instance",
+              "function",
+              "member",
+              "global",
+              "callback",
+              "call"
+            ]
+          },
+          "path": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "MovieClip",
+              "TextField",
+              "Shape",
+              "Function",
+              "Array",
+              "Number",
+              "String",
+              "Boolean",
+              "Object"
+            ]
+          },
+          "value": {
+            "type": [
+              "string",
+              "number",
+              "boolean"
+            ]
+          },
+          "args": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "required": {
+            "type": "string",
+            "enum": [
+              "fatal",
+              "function",
+              "optional",
+              "unused"
+            ]
+          },
+          "proof": {
+            "type": "string",
+            "enum": [
+              "in-game",
+              "source",
+              "inferred"
+            ]
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "extra": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "required",
+          "proof"
+        ],
+        "additionalProperties": {}
+      }
+    },
+    "extra": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "menu",
+    "layer",
+    "entries"
+  ],
+  "additionalProperties": {}
+}
