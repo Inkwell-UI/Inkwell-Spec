@@ -33,6 +33,16 @@ describe("ir", () => {
     doc.nodes["1:2"].extra = { figma: { deep: true } };
     expect(JSON.parse(JSON.stringify(parse(doc)))).toEqual(doc);
   });
+
+  it("auto layout: an older frame gets the alignment defaults, sizing and absolute are optional and survive", () => {
+    const doc: any = minimal();
+    doc.nodes["1:2"].autoLayout = { mode: "vertical", spacing: 4, padding: [0, 0, 0, 0] };
+    expect(parse(doc).nodes["1:2"]).toMatchObject({ autoLayout: { primaryAlign: "start", counterAlign: "start", wrap: false } });
+    doc.nodes["1:2"].layout = { h: "hug", v: "fill", absolute: true };
+    expect(parse(doc).nodes["1:2"]?.layout).toEqual({ h: "hug", v: "fill", absolute: true });
+    doc.nodes["1:2"].layout = { h: "stretch", v: "fixed" };
+    expect(Swf.safeParse(doc).success).toBe(false);
+  });
 });
 
 describe("applyPatch", () => {

@@ -49,6 +49,13 @@ const base = {
   blend: z.string().optional(),
   mask: z.union([z.boolean(), NodeId]).optional(),
   bindings: z.record(z.string(), VariableRef).optional(),
+  // Auto layout (auto layout): how this node is sized along each axis (Figma layoutSizingHorizontal/Vertical) and whether its parent's auto layout skips it.
+  // Absent = fixed on both axes and in the flow. `fill` only means something inside an auto layout; `hug` on a frame or text means it sizes to its content.
+  layout: obj({
+    h: z.enum(["fixed", "hug", "fill"]),
+    v: z.enum(["fixed", "hug", "fill"]),
+    absolute: z.boolean().optional(),
+  }).optional(),
   extra,
 };
 
@@ -61,6 +68,9 @@ export const Frame = obj({
     mode: z.enum(["horizontal", "vertical"]),
     spacing: z.number(),
     padding: z.array(z.number()).length(4),
+    primaryAlign: z.enum(["start", "center", "end", "spaceBetween"]).default("start"), // along `mode` (Figma primaryAxisAlignItems)
+    counterAlign: z.enum(["start", "center", "end"]).default("start"), // across it (counterAxisAlignItems; BASELINE reads as start)
+    wrap: z.boolean().default(false), // Figma layoutWrap; the compilers do not re-lay out a wrapping frame
     dynamic: z.boolean().optional(), // generate runtime layout code (lists, repeaters)
   }).optional(),
 });

@@ -305,6 +305,35 @@
                                   "additionalProperties": {}
                                 }
                               },
+                              "layout": {
+                                "type": "object",
+                                "properties": {
+                                  "h": {
+                                    "type": "string",
+                                    "enum": [
+                                      "fixed",
+                                      "hug",
+                                      "fill"
+                                    ]
+                                  },
+                                  "v": {
+                                    "type": "string",
+                                    "enum": [
+                                      "fixed",
+                                      "hug",
+                                      "fill"
+                                    ]
+                                  },
+                                  "absolute": {
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "h",
+                                  "v"
+                                ],
+                                "additionalProperties": {}
+                              },
                               "extra": {
                                 "type": "object",
                                 "propertyNames": {
@@ -528,6 +557,29 @@
                                       "type": "number"
                                     }
                                   },
+                                  "primaryAlign": {
+                                    "default": "start",
+                                    "type": "string",
+                                    "enum": [
+                                      "start",
+                                      "center",
+                                      "end",
+                                      "spaceBetween"
+                                    ]
+                                  },
+                                  "counterAlign": {
+                                    "default": "start",
+                                    "type": "string",
+                                    "enum": [
+                                      "start",
+                                      "center",
+                                      "end"
+                                    ]
+                                  },
+                                  "wrap": {
+                                    "default": false,
+                                    "type": "boolean"
+                                  },
                                   "dynamic": {
                                     "type": "boolean"
                                   }
@@ -668,6 +720,35 @@
                                   ],
                                   "additionalProperties": {}
                                 }
+                              },
+                              "layout": {
+                                "type": "object",
+                                "properties": {
+                                  "h": {
+                                    "type": "string",
+                                    "enum": [
+                                      "fixed",
+                                      "hug",
+                                      "fill"
+                                    ]
+                                  },
+                                  "v": {
+                                    "type": "string",
+                                    "enum": [
+                                      "fixed",
+                                      "hug",
+                                      "fill"
+                                    ]
+                                  },
+                                  "absolute": {
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "h",
+                                  "v"
+                                ],
+                                "additionalProperties": {}
                               },
                               "extra": {
                                 "type": "object",
@@ -1312,6 +1393,35 @@
                                   "additionalProperties": {}
                                 }
                               },
+                              "layout": {
+                                "type": "object",
+                                "properties": {
+                                  "h": {
+                                    "type": "string",
+                                    "enum": [
+                                      "fixed",
+                                      "hug",
+                                      "fill"
+                                    ]
+                                  },
+                                  "v": {
+                                    "type": "string",
+                                    "enum": [
+                                      "fixed",
+                                      "hug",
+                                      "fill"
+                                    ]
+                                  },
+                                  "absolute": {
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "h",
+                                  "v"
+                                ],
+                                "additionalProperties": {}
+                              },
                               "extra": {
                                 "type": "object",
                                 "propertyNames": {
@@ -1818,6 +1928,35 @@
                                   "additionalProperties": {}
                                 }
                               },
+                              "layout": {
+                                "type": "object",
+                                "properties": {
+                                  "h": {
+                                    "type": "string",
+                                    "enum": [
+                                      "fixed",
+                                      "hug",
+                                      "fill"
+                                    ]
+                                  },
+                                  "v": {
+                                    "type": "string",
+                                    "enum": [
+                                      "fixed",
+                                      "hug",
+                                      "fill"
+                                    ]
+                                  },
+                                  "absolute": {
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "h",
+                                  "v"
+                                ],
+                                "additionalProperties": {}
+                              },
                               "extra": {
                                 "type": "object",
                                 "propertyNames": {
@@ -1975,6 +2114,35 @@
                                   "additionalProperties": {}
                                 }
                               },
+                              "layout": {
+                                "type": "object",
+                                "properties": {
+                                  "h": {
+                                    "type": "string",
+                                    "enum": [
+                                      "fixed",
+                                      "hug",
+                                      "fill"
+                                    ]
+                                  },
+                                  "v": {
+                                    "type": "string",
+                                    "enum": [
+                                      "fixed",
+                                      "hug",
+                                      "fill"
+                                    ]
+                                  },
+                                  "absolute": {
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "h",
+                                  "v"
+                                ],
+                                "additionalProperties": {}
+                              },
                               "extra": {
                                 "type": "object",
                                 "propertyNames": {
@@ -2128,6 +2296,35 @@
                                   ],
                                   "additionalProperties": {}
                                 }
+                              },
+                              "layout": {
+                                "type": "object",
+                                "properties": {
+                                  "h": {
+                                    "type": "string",
+                                    "enum": [
+                                      "fixed",
+                                      "hug",
+                                      "fill"
+                                    ]
+                                  },
+                                  "v": {
+                                    "type": "string",
+                                    "enum": [
+                                      "fixed",
+                                      "hug",
+                                      "fill"
+                                    ]
+                                  },
+                                  "absolute": {
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "h",
+                                  "v"
+                                ],
+                                "additionalProperties": {}
                               },
                               "extra": {
                                 "type": "object",
