@@ -28,6 +28,7 @@ export const NodeDef = z.looseObject({
   outputs: z.array(PinDef).default([]),
   fields: z.record(z.string(), z.unknown()).default({}), // JSON Schema for the node's fields; converted to Zod at load
   as2Template: z.string().optional(), // path of the template inside the pack
+  contract: z.string().optional(), // W5 (frozen in 1.0): the game menu contract this node talks to (e.g. "InventoryMenu"); the editor only allows it in a menu replacement of that contract. Packs before 0.5.3 carried it in `extra.contract`: readers accept both
   requiresRuntime: z.boolean().optional(), // S8: fires/works only with Inkwell Runtime; absent = false. The lint `runtime-required` warns in a HUD widget graph
   extra: Extra,
 });

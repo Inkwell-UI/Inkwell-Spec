@@ -40,6 +40,11 @@ describe("graph", () => {
 describe("pack", () => {
   const def = { kind: "Branch", major: 1, title: "Branch", category: "Flow", milestone: "0.2", pure: false,
     inputs: [{ name: "exec", type: "Exec" }], outputs: [{ name: "then", type: "Exec" }], fields: { type: "object" }, as2Template: "as2/branch.tpl", more: 1 };
+  it("a node definition names the game menu contract it talks to (top-level `contract`; older packs used `extra.contract` and still parse)", () => {
+    expect(NodeDef.parse({ ...def, contract: "InventoryMenu" }).contract).toBe("InventoryMenu");
+    expect(NodeDef.parse({ ...def, extra: { contract: "InventoryMenu" } }).contract).toBeUndefined();
+    expect(NodeDef.safeParse({ ...def, contract: 1 }).success).toBe(false);
+  });
   it("round-trips node definitions, manifest and lock", () => {
     expect(NodeDef.parse(def)).toEqual(def);
     const m = { id: "core", version: "0.2.0", compatible: { tool: "^0.2.0", runtimeApi: "^1.0.0" }, dependencies: { other: "^1.0.0" }, x: 1 };
