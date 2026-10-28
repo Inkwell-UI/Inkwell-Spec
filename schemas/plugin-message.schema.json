@@ -590,6 +590,15 @@
                                   "padding"
                                 ],
                                 "additionalProperties": {}
+                              },
+                              "overflow": {
+                                "type": "string",
+                                "enum": [
+                                  "none",
+                                  "horizontal",
+                                  "vertical",
+                                  "both"
+                                ]
                               }
                             },
                             "required": [
@@ -2412,6 +2421,15 @@
                                   "padding"
                                 ],
                                 "additionalProperties": {}
+                              },
+                              "overflow": {
+                                "type": "string",
+                                "enum": [
+                                  "none",
+                                  "horizontal",
+                                  "vertical",
+                                  "both"
+                                ]
                               }
                             },
                             "required": [
@@ -2847,6 +2865,15 @@
                                   "padding"
                                 ],
                                 "additionalProperties": {}
+                              },
+                              "overflow": {
+                                "type": "string",
+                                "enum": [
+                                  "none",
+                                  "horizontal",
+                                  "vertical",
+                                  "both"
+                                ]
                               }
                             },
                             "required": [
@@ -3477,6 +3504,15 @@
                             "padding"
                           ],
                           "additionalProperties": {}
+                        },
+                        "overflow": {
+                          "type": "string",
+                          "enum": [
+                            "none",
+                            "horizontal",
+                            "vertical",
+                            "both"
+                          ]
                         }
                       },
                       "required": [
@@ -5299,6 +5335,15 @@
                             "padding"
                           ],
                           "additionalProperties": {}
+                        },
+                        "overflow": {
+                          "type": "string",
+                          "enum": [
+                            "none",
+                            "horizontal",
+                            "vertical",
+                            "both"
+                          ]
                         }
                       },
                       "required": [
@@ -5734,6 +5779,15 @@
                             "padding"
                           ],
                           "additionalProperties": {}
+                        },
+                        "overflow": {
+                          "type": "string",
+                          "enum": [
+                            "none",
+                            "horizontal",
+                            "vertical",
+                            "both"
+                          ]
                         }
                       },
                       "required": [

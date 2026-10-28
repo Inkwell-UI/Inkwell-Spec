@@ -21,6 +21,7 @@ Every release of a consumer declares the spec version and protocol version it sp
 | 8 | 5 | 1 | `feature/components` | `feature/components` | unchanged | unchanged | Blueprint graphs (no version bump): `Graph.scope` gains `blueprint`, new optional `Graph.component` (the Figma component id) and `Graph.props` (`{id, name, type, default?}`). An older editor fails to parse such a file and reports it unreadable (closed enum); it lives in the project's `components/` folder, which an older editor never reads. |
 | 8 | 5 | 1 | `feature/components` | `feature/components` | unchanged | unchanged | Plugin message `swfs` gains optional `components` (components on the page away from the design). |
 | 8 | 5 | 1 | `feature/components` | `feature/components` | unchanged | unchanged | IR `instance` and `component` nodes gain optional `clipContent`, `fills`, `autoLayout` (a frame's look; additive, older readers keep them as unknown keys). |
+| 8 | 5 | 1 | `feature/components` | `feature/components` | unchanged | unchanged | IR `frame`, `instance` and `component` nodes gain optional `overflow` (`none`, `horizontal`, `vertical`, `both`: Figma's overflow direction; additive, older readers keep it as an unknown key). |
 | 8 | 5 | 1 | `feature/functions` | `feature/functions` | unchanged | unchanged | Function graphs (no version bump, see "Function graphs" below): `Graph.scope` gains `function`, new optional `Graph.signature`. |
 
 ## Spec v1: the frozen author-facing formats (1.0)

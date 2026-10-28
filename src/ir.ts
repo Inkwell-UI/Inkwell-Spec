@@ -69,12 +69,16 @@ const AutoLayout = obj({
     dynamic: z.boolean().optional(), // generate runtime layout code (lists, repeaters)
   });
 
+// Figma overflowDirection (Prototype > Overflow behaviour): which way a frame's content scrolls inside its clip. Absent = none.
+const Overflow = z.enum(["none", "horizontal", "vertical", "both"]);
+
 export const Frame = obj({
   ...base,
   type: z.literal("frame"),
   clipContent: z.boolean(),
   fills: z.array(Fill).optional(), // background fills (spec 4); compilers may support only some fill types here
   autoLayout: AutoLayout.optional(),
+  overflow: Overflow.optional(),
 });
 
 export const Shape = obj({
@@ -136,6 +140,7 @@ export const Instance = obj({
   clipContent: z.boolean().optional(),
   fills: z.array(Fill).optional(),
   autoLayout: AutoLayout.optional(),
+  overflow: Overflow.optional(),
 });
 
 export const Component = obj({
@@ -145,6 +150,7 @@ export const Component = obj({
   clipContent: z.boolean().optional(),
   fills: z.array(Fill).optional(),
   autoLayout: AutoLayout.optional(),
+  overflow: Overflow.optional(),
 });
 
 export const Node = z.discriminatedUnion("type", [Frame, Shape, Text, Image, Instance, Component]);
