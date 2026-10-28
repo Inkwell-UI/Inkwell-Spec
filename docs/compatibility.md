@@ -18,6 +18,7 @@ Every release of a consumer declares the spec version and protocol version it sp
 | 8 | 5 | 1 | `feat/gamepad-05` | `feat/gamepad-05` (0.5) | unchanged | unchanged | Focus graph and prompts (0.5, W3/W4): `NodeOverlay.focus` typed (`order`, `overrides.up/down/left/right`), new `NodeOverlay.prompt`, `focusGraph`, `resolvePrompt`. Spec version unchanged. |
 | 8 | 5 | 1 | `main` | `main` (0.5) | unchanged | unchanged | Spec freeze (0.5 Phase 7): `NodeDef.contract` becomes a real field (it was `extra.contract` in core pack 0.5.2 and before; optional, so every pack parses). Spec version unchanged. |
 
+| 8 | 5 | 1 | `feature/components` | `feature/components` | unchanged | unchanged | Plugin message `swfs` gains optional `components` (components on the page away from the design). |
 | 8 | 5 | 1 | `feature/components` | `feature/components` | unchanged | unchanged | IR `instance` and `component` nodes gain optional `clipContent`, `fills`, `autoLayout` (a frame's look; additive, older readers keep them as unknown keys). |
 | 8 | 5 | 1 | `feature/functions` | `feature/functions` | unchanged | unchanged | Function graphs (no version bump, see "Function graphs" below): `Graph.scope` gains `function`, new optional `Graph.signature`. |
 
