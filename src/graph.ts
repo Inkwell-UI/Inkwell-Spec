@@ -53,13 +53,19 @@ export const FunctionSignature = z.looseObject({
   dup("exit name", s.exits.map((p) => p.name));
 });
 
+/** A data input of a component (a prop): what the one who places an instance can give it. Same pin types as a function; `id` is stable, `name` may be renamed. */
+export const ComponentProp = z.looseObject({ id: Id, name: z.string().min(1), type: FunctionPinType, default: z.unknown().optional(), extra: Extra });
+
 export const Graph = z.looseObject({
   specVersion: z.number().int(),
   id: Id,
   name: z.string(),
   /** `function`: a callable graph (own file, compiled to its own class, `signature` required); a function's variables are locals of one call. */
-  scope: z.enum(["menu", "component", "function"]),
+  scope: z.enum(["menu", "component", "function", "blueprint"]),
   signature: FunctionSignature.optional(),
+  /** `blueprint`: the behaviour of a reusable component (the graph of every instance). `component` is the Figma node id of the component it belongs to, `props` its data inputs. The graph lives in the project's `components/` folder, not in a SWF. */
+  component: Id.optional(),
+  props: z.array(ComponentProp).optional(),
   nodes: z.array(GraphNode).default([]),
   edges: z.array(GraphEdge).default([]),
   variables: z.array(GraphVariable).default([]),
@@ -69,6 +75,13 @@ export const Graph = z.looseObject({
 }).superRefine((g, ctx) => {
   if (g.scope === "function" && !g.signature) ctx.addIssue({ code: "custom", path: ["signature"], message: "a function graph needs a signature" });
   if (g.scope !== "function" && g.signature) ctx.addIssue({ code: "custom", path: ["signature"], message: "only a function graph has a signature" });
+  if (g.scope === "blueprint" && !g.component) ctx.addIssue({ code: "custom", path: ["component"], message: "a blueprint graph needs the component it belongs to" });
+  if (g.scope !== "blueprint" && (g.component || g.props)) ctx.addIssue({ code: "custom", path: ["component"], message: "only a blueprint graph has a component and props" });
+  const names = new Set<string>();
+  for (const p of g.props ?? []) {
+    if (names.has(p.name)) ctx.addIssue({ code: "custom", path: ["props"], message: `prop name "${p.name}" is used twice` });
+    names.add(p.name);
+  }
 });
 export type Graph = z.infer<typeof Graph>;
 export type GraphNode = z.infer<typeof GraphNode>;

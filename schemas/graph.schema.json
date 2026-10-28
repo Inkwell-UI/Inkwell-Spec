@@ -19,7 +19,8 @@
       "enum": [
         "menu",
         "component",
-        "function"
+        "function",
+        "blueprint"
       ]
     },
     "signature": {
@@ -148,6 +149,50 @@
         "exits"
       ],
       "additionalProperties": {}
+    },
+    "component": {
+      "type": "string",
+      "minLength": 1
+    },
+    "props": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Bool",
+              "Number",
+              "String",
+              "Array",
+              "Object"
+            ]
+          },
+          "default": {},
+          "extra": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type"
+        ],
+        "additionalProperties": {}
+      }
     },
     "nodes": {
       "default": [],

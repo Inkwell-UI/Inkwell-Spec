@@ -29,6 +29,19 @@ describe("graph", () => {
     expect(migrate({ specVersion: 4, a: 1 } as any)).toEqual({ specVersion: 8, a: 1 });
     expect(migrate({ specVersion: 5, a: 1 } as any)).toEqual({ specVersion: 8, a: 1 });
   });
+  describe("blueprint graphs (component behaviour)", () => {
+    const bp = (over: Record<string, unknown> = {}) => ({ ...graph(), scope: "blueprint", component: "36:5", props: [{ id: "p1", name: "label", type: "String", default: "", keep: 1 }], ...over });
+    it("round-trips, unknown keys kept", () => expect(JSON.parse(JSON.stringify(Graph.parse(bp())))).toEqual(bp()));
+    it("needs its component; only a blueprint has a component or props", () => {
+      expect(Graph.safeParse(bp({ component: undefined })).success).toBe(false);
+      expect(Graph.safeParse({ ...graph(), scope: "menu", component: "36:5" }).success).toBe(false);
+      expect(Graph.safeParse({ ...graph(), scope: "function", signature: { exits: [{ id: "x", name: "Done" }] }, props: [] }).success).toBe(false);
+    });
+    it("prop names are unique and take data types only", () => {
+      expect(Graph.safeParse(bp({ props: [{ id: "a", name: "x", type: "String" }, { id: "b", name: "x", type: "Number" }] })).success).toBe(false);
+      expect(Graph.safeParse(bp({ props: [{ id: "a", name: "x", type: "Exec" }] })).success).toBe(false);
+    });
+  });
   describe("function graphs", () => {
     const sig = () => ({
       inputs: [{ id: "i1", name: "title", type: "String", default: "", keep: 1 }],
