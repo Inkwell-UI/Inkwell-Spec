@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { NodeId, Swf } from "./ir.js";
+import { Node, NodeId, Swf } from "./ir.js";
 import { Patch } from "./patch.js";
 import { SPEC_VERSION } from "./version.js";
 
@@ -39,8 +39,10 @@ export const PatchMsg = msg({
 export const HashTree = msg({ type: z.literal("hashTree"), swfId: NodeId, nodeHashes: z.record(NodeId, z.string()) });
 const LayerRef = msg({ id: NodeId, name: z.string() });
 /** Which top-level frames exist (SWFs) and which loose top-level layers belong to none. Sent on connect and when either changes. */
-/** `components`: components (and component sets) directly on the page, kept away from the design on purpose; neither an SWF nor loose. */
-export const Swfs = msg({ type: z.literal("swfs"), frames: z.array(LayerRef), loose: z.array(LayerRef), components: z.array(LayerRef).optional() });
+/** The inside of a component kept on the page: the component node and everything under it, so the editor can show its composition although it is in no SWF. */
+export const ComponentTree = msg({ id: NodeId, name: z.string(), nodes: z.array(Node) });
+/** `components`: components (and component sets) directly on the page, kept away from the design on purpose; neither an SWF nor loose. `componentTrees`: the inside of each of them. */
+export const Swfs = msg({ type: z.literal("swfs"), frames: z.array(LayerRef), loose: z.array(LayerRef), components: z.array(LayerRef).optional(), componentTrees: z.array(ComponentTree).optional() });
 export const Selection = msg({ type: z.literal("selection"), ids: z.array(NodeId) });
 /** Figma image hash (40 hex digits, SHA-1). Validated because it becomes a file name (assets/<hash>.png, textures/.../<hash>.dds). */
 export const AssetHash = z.string().regex(/^[0-9a-f]{40}$/, "asset hash must be 40 lower-case hex digits");
