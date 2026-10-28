@@ -59,12 +59,7 @@ const base = {
   extra,
 };
 
-export const Frame = obj({
-  ...base,
-  type: z.literal("frame"),
-  clipContent: z.boolean(),
-  fills: z.array(Fill).optional(), // background fills (spec 4); compilers may support only some fill types here
-  autoLayout: obj({
+const AutoLayout = obj({
     mode: z.enum(["horizontal", "vertical"]),
     spacing: z.number(),
     padding: z.array(z.number()).length(4),
@@ -72,7 +67,14 @@ export const Frame = obj({
     counterAlign: z.enum(["start", "center", "end"]).default("start"), // across it (counterAxisAlignItems; BASELINE reads as start)
     wrap: z.boolean().default(false), // Figma layoutWrap; the compilers do not re-lay out a wrapping frame
     dynamic: z.boolean().optional(), // generate runtime layout code (lists, repeaters)
-  }).optional(),
+  });
+
+export const Frame = obj({
+  ...base,
+  type: z.literal("frame"),
+  clipContent: z.boolean(),
+  fills: z.array(Fill).optional(), // background fills (spec 4); compilers may support only some fill types here
+  autoLayout: AutoLayout.optional(),
 });
 
 export const Shape = obj({
@@ -130,12 +132,19 @@ export const Instance = obj({
   component: NodeId,
   variant: z.string().optional(),
   overrides: z.record(z.string(), z.unknown()).optional(),
+  // An instance and a component are frames with a link: they draw like one (the root's own background, clipping and auto layout).
+  clipContent: z.boolean().optional(),
+  fills: z.array(Fill).optional(),
+  autoLayout: AutoLayout.optional(),
 });
 
 export const Component = obj({
   ...base,
   type: z.literal("component"),
   variants: z.array(obj({ name: z.string(), node: NodeId })), // compiled to frame labels
+  clipContent: z.boolean().optional(),
+  fills: z.array(Fill).optional(),
+  autoLayout: AutoLayout.optional(),
 });
 
 export const Node = z.discriminatedUnion("type", [Frame, Shape, Text, Image, Instance, Component]);
