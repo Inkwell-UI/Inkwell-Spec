@@ -85,12 +85,13 @@ describe("MenuDef / MenuSettings", () => {
       "swf ext": { swf: "Interface/x.gfx" }, minRuntime: { minRuntime: "0.3" }, "minRuntime 4 digits": { minRuntime: "0.3.1000" },
       inputContext: { inputContext: "gameplay" }, "depth 16": { depth: 16 }, "depth -1": { depth: -1 }, "depth frac": { depth: 1.5 },
       "hotkey 1": { triggers: { hotkey: 1 } }, "hotkey 256": { triggers: { hotkey: 256 } }, "modEvent space": { triggers: { modEvent: "a b" } },
-      "modEvent 65": { triggers: { modEvent: "a".repeat(65) } }, "flag type": { flags: { modal: "yes" } }, "papyrus type": { triggers: { papyrus: 1 } },
+      "modEvent 65": { triggers: { modEvent: "a".repeat(65) } }, "systemMenu empty": { triggers: { systemMenu: "" } }, "systemMenu 65": { triggers: { systemMenu: "a".repeat(65) } }, "flag type": { flags: { modal: "yes" } }, "papyrus type": { triggers: { papyrus: 1 } },
     };
     for (const [k, patch] of Object.entries(bad)) expect(MenuDef.safeParse({ ...menu(), ...(patch as object) }).success, k).toBe(false);
     expect(MenuDef.safeParse({ ...menu(), specVersion: "6" }).success).toBe(false);
     expect(MenuDef.safeParse({ ...menu(), depth: 15, triggers: { hotkey: 255 } }).success).toBe(true);
     expect(MenuDef.safeParse({ ...menu(), triggers: { hotkey: 2 } }).success).toBe(true);
+    expect(MenuDef.safeParse({ ...menu(), triggers: { systemMenu: "$MY_ENTRY" } }).success).toBe(true);
   });
   it("MenuSettings: optional name/swf, userDefaults, unknown keys kept", () => {
     const s = { specVersion: 6, flags: { pausesGame: false, cursor: true, modal: false, closeOnEscape: true }, depth: 3, triggers: { papyrus: true },

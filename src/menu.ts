@@ -10,6 +10,8 @@ export const MENU_WARN_THRESHOLD = 4;
 export const MENU_MIN_SPEC_VERSION = 6;
 export const MENU_NAME = /^[A-Za-z][A-Za-z0-9_]{1,63}$/;
 export const MOD_EVENT_NAME = /^[A-Za-z0-9_]{1,64}$/;
+/** `triggers.systemMenu`: the text (or `$Key` translation key) of the entry added to the Journal's System page. */
+export const SYSTEM_MENU_LABEL = { min: 1, max: 64 } as const;
 export const HOTKEY_RANGE = { min: 2, max: 255 } as const; // 1 (Escape) is reserved
 export const DEPTH_RANGE = { min: 0, max: 15 } as const;
 export const INPUT_CONTEXTS = ["none", "menuMode"] as const;
@@ -47,6 +49,7 @@ const Triggers = z.looseObject({
   hotkey: Hotkey.optional(),
   papyrus: z.boolean().default(true),
   modEvent: z.string().regex(MOD_EVENT_NAME).optional(),
+  systemMenu: z.string().min(SYSTEM_MENU_LABEL.min).max(SYSTEM_MENU_LABEL.max).optional(),
 });
 const InputContext = z.enum(INPUT_CONTEXTS);
 const Depth = z.number().int().min(DEPTH_RANGE.min).max(DEPTH_RANGE.max).default(3);

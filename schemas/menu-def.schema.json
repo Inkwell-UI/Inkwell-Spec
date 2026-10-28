@@ -78,6 +78,11 @@
         "modEvent": {
           "type": "string",
           "pattern": "^[A-Za-z0-9_]{1,64}$"
+        },
+        "systemMenu": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
         }
       },
       "additionalProperties": {}
