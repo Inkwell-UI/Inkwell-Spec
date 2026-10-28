@@ -97,6 +97,17 @@ describe("migrate", () => {
     expect(order).toEqual([1, 2]);
     expect(r).toEqual({ specVersion: 3, trail: ["1>2", "2>3"] });
   });
+  it("a document saved at every earlier version (1 to 7) migrates to the current one and parses; a 7 menu replacement with `base` gets `layers` (Spec v1 freeze)", () => {
+    for (let v = 1; v < SPEC_VERSION; v++) {
+      const m = migrate({ ...minimal(), specVersion: v });
+      expect(m.specVersion).toBe(SPEC_VERSION);
+      ok(parse(m));
+    }
+    const old = { ...minimal(), specVersion: 7, target: { kind: "menuReplacement", contract: "InventoryMenu", base: "vanilla" } };
+    const m = migrate(old);
+    expect(m.target).toEqual({ kind: "menuReplacement", contract: "InventoryMenu", layers: ["engine"] });
+    expect(parse(m).target).toMatchObject({ kind: "menuReplacement", layers: ["engine"] });
+  });
   it("current docs pass, newer docs are rejected", () => {
     expect(migrate(minimal()).specVersion).toBe(SPEC_VERSION);
     expect(() => migrate({ specVersion: SPEC_VERSION + 1 })).toThrow();
