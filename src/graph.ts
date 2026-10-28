@@ -26,17 +26,49 @@ export const GraphGroup = z.looseObject({
   id: Id, name: z.string(), nodes: z.array(Id).default([]), pos: Pos, size: Size.optional(), extra: Extra,
 });
 
+/** Types a function can take and return. Component types (Text, Button...) name a Figma layer by id in the calling graph, so they stay out of a signature. */
+export const FUNCTION_PIN_TYPES = ["Bool", "Number", "String", "Array", "Object"] as const;
+export const FunctionPinType = z.enum(FUNCTION_PIN_TYPES);
+/** `id` is stable (a call site refers to the pin by it); `name` is what the author sees and may be renamed. */
+export const FunctionPin = z.looseObject({ id: Id, name: z.string().min(1), type: FunctionPinType, default: z.unknown().optional(), extra: Extra });
+/** A named way out of the function (an exec output of its Call node). */
+export const FunctionExit = z.looseObject({ id: Id, name: z.string().min(1), extra: Extra });
+/** The interface of a function graph. Outputs are shared by all exits: an Exit node supplies a value for each. */
+export const FunctionSignature = z.looseObject({
+  inputs: z.array(FunctionPin).default([]),
+  outputs: z.array(FunctionPin).default([]),
+  exits: z.array(FunctionExit).min(1),
+  extra: Extra,
+}).superRefine((s, ctx) => {
+  const dup = (what: string, ids: string[]): void => {
+    const seen = new Set<string>();
+    for (const id of ids) {
+      if (seen.has(id)) ctx.addIssue({ code: "custom", message: `${what} "${id}" is used twice in the signature` });
+      seen.add(id);
+    }
+  };
+  dup("pin or exit id", [...s.inputs, ...s.outputs, ...s.exits].map((p) => p.id));
+  dup("input name", s.inputs.map((p) => p.name));
+  dup("output name", s.outputs.map((p) => p.name));
+  dup("exit name", s.exits.map((p) => p.name));
+});
+
 export const Graph = z.looseObject({
   specVersion: z.number().int(),
   id: Id,
   name: z.string(),
-  scope: z.enum(["menu", "component"]),
+  /** `function`: a callable graph (own file, compiled to its own class, `signature` required); a function's variables are locals of one call. */
+  scope: z.enum(["menu", "component", "function"]),
+  signature: FunctionSignature.optional(),
   nodes: z.array(GraphNode).default([]),
   edges: z.array(GraphEdge).default([]),
   variables: z.array(GraphVariable).default([]),
   comments: z.array(GraphComment).default([]),
   groups: z.array(GraphGroup).default([]),
   extra: Extra,
+}).superRefine((g, ctx) => {
+  if (g.scope === "function" && !g.signature) ctx.addIssue({ code: "custom", path: ["signature"], message: "a function graph needs a signature" });
+  if (g.scope !== "function" && g.signature) ctx.addIssue({ code: "custom", path: ["signature"], message: "only a function graph has a signature" });
 });
 export type Graph = z.infer<typeof Graph>;
 export type GraphNode = z.infer<typeof GraphNode>;

@@ -18,8 +18,136 @@
       "type": "string",
       "enum": [
         "menu",
-        "component"
+        "component",
+        "function"
       ]
+    },
+    "signature": {
+      "type": "object",
+      "properties": {
+        "inputs": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "Bool",
+                  "Number",
+                  "String",
+                  "Array",
+                  "Object"
+                ]
+              },
+              "default": {},
+              "extra": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "type"
+            ],
+            "additionalProperties": {}
+          }
+        },
+        "outputs": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "Bool",
+                  "Number",
+                  "String",
+                  "Array",
+                  "Object"
+                ]
+              },
+              "default": {},
+              "extra": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "type"
+            ],
+            "additionalProperties": {}
+          }
+        },
+        "exits": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "extra": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ],
+            "additionalProperties": {}
+          }
+        },
+        "extra": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "exits"
+      ],
+      "additionalProperties": {}
     },
     "nodes": {
       "default": [],

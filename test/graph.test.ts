@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Graph, NodeDef, PackManifest, PacksLock, PackIndex, PACK_ASSET, packAssetUrl, parsePacksLock, writePacksLock, PinType, pinCompat, migrate, SPEC_VERSION } from "../src/index.js";
+import { Graph, FUNCTION_PIN_TYPES, NodeDef, PackManifest, PacksLock, PackIndex, PACK_ASSET, packAssetUrl, parsePacksLock, writePacksLock, PinType, pinCompat, migrate, SPEC_VERSION } from "../src/index.js";
 
 const graph = () => ({
   specVersion: SPEC_VERSION, id: "g1", name: "Popup", scope: "menu", zz: 1,
@@ -28,6 +28,46 @@ describe("graph", () => {
   it("migrates 4 -> ... -> 8 unchanged (a graph has no target)", () => {
     expect(migrate({ specVersion: 4, a: 1 } as any)).toEqual({ specVersion: 8, a: 1 });
     expect(migrate({ specVersion: 5, a: 1 } as any)).toEqual({ specVersion: 8, a: 1 });
+  });
+  describe("function graphs", () => {
+    const sig = () => ({
+      inputs: [{ id: "i1", name: "title", type: "String", default: "", keep: 1 }],
+      outputs: [{ id: "o1", name: "count", type: "Number" }],
+      exits: [{ id: "x1", name: "Done" }, { id: "x2", name: "Failed" }],
+      note: "kept",
+    });
+    const fn = (over: Record<string, unknown> = {}) => ({ ...graph(), scope: "function", signature: sig(), ...over });
+    it("round-trips the signature with unknown keys", () => {
+      const g = fn();
+      expect(JSON.parse(JSON.stringify(Graph.parse(g)))).toEqual(g);
+    });
+    it("a graph saved before functions (no signature, menu or component scope) parses unchanged", () => {
+      for (const scope of ["menu", "component"]) {
+        const g = { ...graph(), scope };
+        expect(JSON.parse(JSON.stringify(Graph.parse(g)))).toEqual(g);
+      }
+    });
+    it("a function needs a signature and only a function has one", () => {
+      expect(Graph.safeParse({ ...graph(), scope: "function" }).success).toBe(false);
+      expect(Graph.safeParse({ ...graph(), scope: "menu", signature: sig() }).success).toBe(false);
+    });
+    it("needs at least one exit; inputs and outputs may be empty", () => {
+      expect(Graph.safeParse(fn({ signature: { ...sig(), exits: [] } })).success).toBe(false);
+      expect(Graph.parse(fn({ signature: { exits: [{ id: "x", name: "Done" }] } })).signature).toMatchObject({ inputs: [], outputs: [] });
+    });
+    it("pin ids are unique across inputs, outputs and exits; names are unique per list", () => {
+      const s = sig();
+      expect(Graph.safeParse(fn({ signature: { ...s, outputs: [{ id: "i1", name: "count", type: "Number" }] } })).success).toBe(false);
+      expect(Graph.safeParse(fn({ signature: { ...s, exits: [{ id: "x1", name: "Done" }, { id: "x2", name: "Done" }] } })).success).toBe(false);
+      expect(Graph.safeParse(fn({ signature: { ...s, inputs: [...s.inputs, { id: "i2", name: "title", type: "Number" }] } })).success).toBe(false);
+      // an input and an output may share a name: they are different lists
+      expect(Graph.safeParse(fn({ signature: { ...s, outputs: [{ id: "o1", name: "title", type: "String" }] } })).success).toBe(true);
+    });
+    it("pins take data types only (no Exec, no component types)", () => {
+      for (const type of ["Exec", "Text", "Button", "List", "Image", "Clip", "Float"])
+        expect(Graph.safeParse(fn({ signature: { ...sig(), inputs: [{ id: "i1", name: "a", type }] } })).success, type).toBe(false);
+      for (const type of FUNCTION_PIN_TYPES) expect(Graph.safeParse(fn({ signature: { ...sig(), inputs: [{ id: "i1", name: "a", type }] } })).success, type).toBe(true);
+    });
   });
   it("saved scope: Bool, Number, String only", () => {
     const v = (type: string, scope = "saved") => ({ ...graph(), variables: [{ id: "v", name: "x", type, scope, keep: 1 }] });

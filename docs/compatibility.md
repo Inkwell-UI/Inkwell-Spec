@@ -18,6 +18,8 @@ Every release of a consumer declares the spec version and protocol version it sp
 | 8 | 5 | 1 | `feat/gamepad-05` | `feat/gamepad-05` (0.5) | unchanged | unchanged | Focus graph and prompts (0.5, W3/W4): `NodeOverlay.focus` typed (`order`, `overrides.up/down/left/right`), new `NodeOverlay.prompt`, `focusGraph`, `resolvePrompt`. Spec version unchanged. |
 | 8 | 5 | 1 | `main` | `main` (0.5) | unchanged | unchanged | Spec freeze (0.5 Phase 7): `NodeDef.contract` becomes a real field (it was `extra.contract` in core pack 0.5.2 and before; optional, so every pack parses). Spec version unchanged. |
 
+| 8 | 5 | 1 | `feature/functions` | `feature/functions` | unchanged | unchanged | Function graphs (no version bump, see "Function graphs" below): `Graph.scope` gains `function`, new optional `Graph.signature`. |
+
 ## Spec v1: the frozen author-facing formats (1.0)
 
 From release 1.0 on, the formats people write, share or keep in their projects change **only with a migration and a compatibility note here**; a field is never renamed or removed in place. Until then (0.x) they may still change. `specVersion` (8 at 0.5) keeps counting up; "v1" names the freeze, not a number in the files.
@@ -40,6 +42,13 @@ From release 1.0 on, the formats people write, share or keep in their projects c
 - A project saved at any older `specVersion` keeps opening: `migrate()` runs the whole chain (`1 -> ... -> 8`). Tests: `test/spec.test.ts` (chain, 7 -> 8 `baseToLayers`) and the editor's `examples.test.ts` (every sample opens, the oldest at spec 4).
 - Packs: a pack built for an older tool stays loadable; `compatible.tool` says which editors it works with.
 - The JSON schemas in `schemas/` are generated (`yarn gen:schemas`) and checked against the Zod types by a test; the schema file is the contract other tools should use.
+
+## Function graphs (no version bump)
+
+- **What changed:** a graph file can now be a function: `scope: "function"` plus a `signature` `{inputs, outputs, exits, extra?}`. Each input and output is `{id, name, type, default?}` with a type from `FUNCTION_PIN_TYPES` (Bool, Number, String, Array, Object); each exit is `{id, name}` and there is at least one. `id` is stable (a call site refers to a pin or exit by id, so a rename does not break calls); pin and exit ids are unique across the whole signature, names are unique within inputs, outputs and exits. A function graph must have a signature and no other graph may have one. Outputs are shared by all exits.
+- **Why no version bump:** a graph without `signature` and with scope `menu` or `component` parses exactly as before (fixture test in `test/graph.test.ts`), the IR, overlay and both protocols are untouched, and nothing in a stored file needs rewriting. A bump would force a Figma plugin rebuild (`ackHello`) for no gain.
+- **Old editors:** an editor from before this change fails to parse a `function` graph (the `scope` enum is closed) and reports that graph as unreadable; it does not touch the file. Projects without functions open as before.
+- **Not in the schema (editor lint):** that a Call Function node's pins match the signature, recursion, that every exit is reachable, and that function variables are not `saved`.
 
 ## 7 to 8 (contracts, 0.5)
 
