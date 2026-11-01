@@ -24,6 +24,8 @@ export const Stroke = obj({
   fill: Fill,
   weight: z.number(),
   alignment: z.enum(["inside", "center", "outside"]),
+  // Figma "individual strokes" (strokeTop/Right/Bottom/LeftWeight): the weight of each side; present only when they differ. `weight` is then the largest of them.
+  sides: obj({ top: z.number(), right: z.number(), bottom: z.number(), left: z.number() }).optional(),
 });
 
 /** Cubic path: move/line/cubic/close with absolute coordinates. */
@@ -77,6 +79,7 @@ export const Frame = obj({
   type: z.literal("frame"),
   clipContent: z.boolean(),
   fills: z.array(Fill).optional(), // background fills (spec 4); compilers may support only some fill types here
+  strokes: z.array(Stroke).optional(), // the frame's border (a Figma frame stroke, also individual sides)
   autoLayout: AutoLayout.optional(),
   overflow: Overflow.optional(),
 });
@@ -139,6 +142,7 @@ export const Instance = obj({
   // An instance and a component are frames with a link: they draw like one (the root's own background, clipping and auto layout).
   clipContent: z.boolean().optional(),
   fills: z.array(Fill).optional(),
+  strokes: z.array(Stroke).optional(),
   autoLayout: AutoLayout.optional(),
   overflow: Overflow.optional(),
 });
@@ -149,6 +153,7 @@ export const Component = obj({
   variants: z.array(obj({ name: z.string(), node: NodeId })), // compiled to frame labels
   clipContent: z.boolean().optional(),
   fills: z.array(Fill).optional(),
+  strokes: z.array(Stroke).optional(),
   autoLayout: AutoLayout.optional(),
   overflow: Overflow.optional(),
 });

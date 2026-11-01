@@ -53,6 +53,8 @@ export function baseToLayers(doc: any): any {
 
 /** Auto layout (still spec 8, no bump: nothing is published and the in-game runtime reads this number): `layout` on every node (sizing per axis, absolute) and `primaryAlign`, `counterAlign`, `wrap` on `autoLayout`. All optional or defaulted: nothing to rewrite. */
 
+/** Frame strokes (still spec 8, no bump, like auto layout above): `strokes` on frames, instances and components, and `sides` on a Stroke (Figma individual strokes). Both optional: nothing to rewrite. */
+
 /** Ordered chain. */
 export const MIGRATIONS: Migration[] = [{ from: 1, to: 2, fn: textLayoutToFields }, { from: 2, to: 3, fn: noop }, { from: 3, to: 4, fn: noop }, { from: 4, to: 5, fn: noop }, { from: 5, to: 6, fn: noop }, { from: 6, to: 7, fn: noop }, { from: 7, to: 8, fn: baseToLayers }];
 
