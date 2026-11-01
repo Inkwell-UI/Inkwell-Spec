@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  MenuDef, MenuSettings, normalizeSwfPath, effectiveInputContext, MENU_SLOTS, MENU_WARN_THRESHOLD, NodeOverlay, NodeDef,
+  MenuDef, MenuSettings, normalizeSwfPath, pickSwf, variantSwfPath, effectiveInputContext, MENU_SLOTS, MENU_WARN_THRESHOLD, NodeOverlay, NodeDef,
   parseIni, writeIni, writeDefaultModIni, resolveMenu, findMenuIni, RuntimeIni,
   packVersion, unpackVersion, compareVersions, isRuntimeCompatible, parseVersion, RUNTIME_MESSAGES,
   BRIDGE_MEMBERS, PAPYRUS_API, COSAVE_UNIQUE_ID, COSAVE_RECORD_SAVED,
@@ -211,5 +211,33 @@ describe("runtime protocol", () => {
       { type: "watch", menu: "A", graph: "g", scope: "world", name: "n", value: 1 }, { type: "watch", menu: "A", graph: "g", scope: "menu", name: "n", value: [1] },
       { type: "error", code: "oops", message: "" }, { type: "reload" }, { type: "helloAck", ok: true, error: "bad-message" },
     ]) expect(RuntimeMessage.safeParse(m).success, JSON.stringify(m)).toBe(false);
+  });
+});
+
+describe("menu variants", () => {
+  const swf = "Interface/Inkwell/M/Menu.swf";
+  const variants = { "21:9": variantSwfPath(swf, "21:9"), "16:10": variantSwfPath(swf, "16:10"), "32:9": variantSwfPath(swf, "32:9") };
+  it("names a variant file", () => {
+    expect(variants["21:9"]).toBe("Interface/Inkwell/M/Menu_21x9.swf");
+    expect(normalizeSwfPath(variants["21:9"])).toBe("Inkwell/M/Menu_21x9");
+  });
+  it("picks the nearest shape, 16:9 and unknown shapes fall back to swf", () => {
+    const at = (w: number, h: number): string => pickSwf(swf, variants, w / h);
+    expect(at(1920, 1080)).toBe(swf);
+    expect(at(3840, 2160)).toBe(swf);
+    expect(at(2560, 1080)).toBe(variants["21:9"]);
+    expect(at(3440, 1440)).toBe(variants["21:9"]);
+    expect(at(3840, 1080)).toBe(variants["32:9"]);
+    expect(at(5120, 1440)).toBe(variants["32:9"]);
+    expect(at(1920, 1200)).toBe(variants["16:10"]);
+    expect(at(1280, 1024)).toBe(variants["16:10"]); // 5:4 is nearer 16:10 than 16:9
+    expect(pickSwf(swf, undefined, 21 / 9)).toBe(swf);
+    expect(pickSwf(swf, { bad: "x" }, 21 / 9)).toBe(swf);
+  });
+  it("MenuDef accepts variants and rejects a bad key or path", () => {
+    const base = { specVersion: 8, name: "Ab", swf };
+    expect(MenuDef.safeParse({ ...base, variants }).success).toBe(true);
+    expect(MenuDef.safeParse({ ...base, variants: { "0:9": swf } }).success).toBe(false);
+    expect(MenuDef.safeParse({ ...base, variants: { "21:9": "x.swf" } }).success).toBe(false);
   });
 });

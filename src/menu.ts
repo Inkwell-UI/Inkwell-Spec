@@ -36,6 +36,33 @@ export function normalizeSwfPath(swf: string): string | null {
   return bare;
 }
 const SwfPath = z.string().refine((s) => normalizeSwfPath(s) !== null, "swf must be relative to Data/, start with Interface/, end with .swf, use / and contain no '..', ':' or leading '/'");
+
+/** Screen shapes a menu may ship its own SWF for; `swf` itself is the 16:9 layout (4K is 16:9 too) and the fallback. */
+export const MENU_VARIANT_ASPECTS = ["16:10", "21:9", "32:9"] as const;
+/** `Interface/Inkwell/Mod/Menu.swf` + "21:9" -> `Interface/Inkwell/Mod/Menu_21x9.swf` (the editor's file name for a variant). */
+export const variantSwfPath = (swf: string, aspect: string): string => swf.replace(/\.swf$/i, `_${aspect.replace(":", "x")}.swf`);
+/** A screen shape as "W:H" (both 1 to 999). */
+export const VARIANT_ASPECT = /^[1-9]\d{0,2}:[1-9]\d{0,2}$/;
+/** Width / height of a "W:H" key, or null when it is not one. */
+export const aspectRatioOf = (key: string): number | null => {
+  if (!VARIANT_ASPECT.test(key)) return null;
+  const [w, h] = key.split(":").map(Number);
+  return w! / h!;
+};
+/**
+ * Runtime rule as a pure function: the SWF to open on a screen of `ratio` (width / height): the one of `swf` (as 16:9) and `variants` whose ratio is
+ * nearest (compared as ratios of ratios, so 21:9 vs 16:9 is as far as 9:21 vs 9:16); a tie keeps `swf`. A bad variant key is ignored.
+ */
+export function pickSwf(swf: string, variants: Record<string, string> | undefined, ratio: number): string {
+  let best = swf;
+  let bestD = Math.abs(Math.log(ratio / (16 / 9)));
+  for (const [k, p] of Object.entries(variants ?? {})) {
+    const r = aspectRatioOf(k);
+    const d = r === null ? Infinity : Math.abs(Math.log(ratio / r));
+    if (d < bestD - 1e-9) (best = p), (bestD = d);
+  }
+  return best;
+}
 const MenuName = z.string().regex(MENU_NAME, "name must match ^[A-Za-z][A-Za-z0-9_]{1,63}$");
 const Hotkey = z.number().int().min(HOTKEY_RANGE.min).max(HOTKEY_RANGE.max);
 
@@ -59,6 +86,8 @@ export const MenuDef = z.looseObject({
   specVersion: z.number().int(),
   name: MenuName,
   swf: SwfPath,
+  /** Optional layouts for other screen shapes, keyed "W:H" (see `pickSwf`); an older runtime ignores it and always opens `swf`. */
+  variants: z.record(z.string().regex(VARIANT_ASPECT), SwfPath).optional(),
   minRuntime: z.string().regex(/^\d{1,3}\.\d{1,3}\.\d{1,3}$/).default(FIRST_RUNTIME_VERSION),
   flags: Flags.default(() => Flags.parse({})),
   /** Absent = "menuMode" if flags.modal else "none" (see effectiveInputContext). */
