@@ -38,6 +38,12 @@
         "closeOnEscape": {
           "default": true,
           "type": "boolean"
+        },
+        "blur": {
+          "type": "boolean"
+        },
+        "hideHud": {
+          "type": "boolean"
         }
       },
       "additionalProperties": {}

@@ -71,6 +71,10 @@ const Flags = z.looseObject({
   cursor: z.boolean().default(false),
   modal: z.boolean().default(false),
   closeOnEscape: z.boolean().default(true),
+  /** Skyrim's own full-screen menu blur while the menu is open. Optional, not defaulted: absent means "never chosen", so the editor may set it from a Figma background blur; absent = off at run time. */
+  blur: z.boolean().optional(),
+  /** Hides the HUD (health bars, compass) while the menu is open. Optional like `blur`: absent = off, so existing menu files stay as they are. */
+  hideHud: z.boolean().optional(),
 });
 const Triggers = z.looseObject({
   hotkey: Hotkey.optional(),

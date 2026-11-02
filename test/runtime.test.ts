@@ -78,6 +78,15 @@ describe("MenuDef / MenuSettings", () => {
     expect(effectiveInputContext({ ...m, flags: { ...m.flags, modal: true } })).toBe("menuMode");
     expect(effectiveInputContext({ ...m, inputContext: "none", flags: { ...m.flags, modal: true } })).toBe("none");
   });
+  it("keeps flags.blur absent until it is chosen", () => {
+    const base = { specVersion: 6, name: "Ab", swf: "Interface/a.swf" };
+    expect(MenuDef.parse(base).flags.blur).toBeUndefined();
+    expect(MenuDef.parse({ ...base, flags: { blur: true } }).flags.blur).toBe(true);
+    expect(MenuDef.safeParse({ ...base, flags: { blur: "yes" } }).success).toBe(false);
+    expect(MenuDef.parse(base).flags.hideHud).toBeUndefined();
+    expect(MenuDef.parse({ ...base, flags: { hideHud: true } }).flags.hideHud).toBe(true);
+    expect(MenuDef.safeParse({ ...base, flags: { hideHud: 1 } }).success).toBe(false);
+  });
   it("rejects each invalid field", () => {
     const bad: Record<string, unknown> = {
       "name 1 char": { name: "A" }, "name digit start": { name: "1abc" }, "name dash": { name: "a-b" }, "name 65": { name: "a".repeat(65) },
