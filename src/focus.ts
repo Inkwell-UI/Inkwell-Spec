@@ -94,6 +94,9 @@ export const PromptOverlay = z.looseObject({
   keyboard: z.string().optional(),
   xbox: z.string().optional(),
   playstation: z.string().optional(),
+  /** Which child of the prompt is the icon place and which is the text: layer ids. Unset: a layer named `promptIcon`, the first text layer. */
+  icon: z.string().optional(),
+  label: z.string().optional(),
 });
 export type PromptOverlay = z.infer<typeof PromptOverlay>;
 
