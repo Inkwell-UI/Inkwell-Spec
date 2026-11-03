@@ -17,6 +17,8 @@ const Endpoint = z.looseObject({ node: Id, pin: z.string().min(1) });
 export const GraphEdge = z.looseObject({ from: Endpoint, to: Endpoint, extra: Extra });
 export const GraphVariable = z.looseObject({
   id: Id, name: z.string(), type: PinType.exclude(["Exec"]), scope: z.enum(["component", "menu", "saved"]).default("menu"),
+  /** Menu-scope only: layer graphs of the SWF may also read and write it (default: only the menu graph and its components). */
+  global: z.boolean().optional(),
   default: z.unknown().optional(), extra: Extra,
 }).refine((v) => v.scope !== "saved" || (SAVED_TYPES as readonly string[]).includes(v.type), {
   path: ["type"], message: "a saved variable must be Bool, Number or String",
