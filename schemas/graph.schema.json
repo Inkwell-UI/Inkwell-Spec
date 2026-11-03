@@ -342,6 +342,9 @@
               "saved"
             ]
           },
+          "global": {
+            "type": "boolean"
+          },
           "default": {},
           "extra": {
             "type": "object",
