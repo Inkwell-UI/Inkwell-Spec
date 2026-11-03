@@ -23,6 +23,7 @@ Every release of a consumer declares the spec version and protocol version it sp
 | 8 | 5 | 1 | `feature/components` | `feature/components` | unchanged | unchanged | IR `instance` and `component` nodes gain optional `clipContent`, `fills`, `autoLayout` (a frame's look; additive, older readers keep them as unknown keys). |
 | 8 | 5 | 1 | `feature/components` | `feature/components` | unchanged | unchanged | IR `frame`, `instance` and `component` nodes gain optional `overflow` (`none`, `horizontal`, `vertical`, `both`: Figma's overflow direction; additive, older readers keep it as an unknown key). |
 | 8 | 5 | 1 | `feature/functions` | `feature/functions` | unchanged | unchanged | Function graphs (no version bump, see "Function graphs" below): `Graph.scope` gains `function`, new optional `Graph.signature`. |
+| 8 | 5 | 1 | `main` | `main` | unchanged | unchanged | Architecture review 2026-11-03: `MOD_ID`, `modIdProblem`, `cleanModId` (src/modId.ts) and `menuSwfPath` moved here from the editor; same behavior, no format change. |
 
 ## Spec v1: the frozen author-facing formats (1.0)
 

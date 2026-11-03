@@ -136,3 +136,6 @@ export const MenuSettings = z.looseObject({
   extra: Extra,
 });
 export type MenuSettings = z.infer<typeof MenuSettings>;
+
+/** O2 (owner decision 2026-10-26, verified in game on SE 1.7.104): where a custom menu's SWF goes, relative to `Data/`. One place to change if the engine ever refuses a sub-path. */
+export const menuSwfPath = (modId: string, swfFile: string): string => `Interface/Inkwell/${modId}/${swfFile}.swf`;

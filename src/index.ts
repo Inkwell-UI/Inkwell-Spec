@@ -5,6 +5,7 @@ export * from "./ini.js";
 export * from "./ir.js";
 export * from "./localization.js";
 export * from "./menu.js";
+export * from "./modId.js";
 export * from "./overlay.js";
 export * from "./pack.js";
 export * from "./patch.js";
