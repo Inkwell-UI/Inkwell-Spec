@@ -4,6 +4,8 @@ import { NodeId } from "./ir.js";
 
 export const FOCUS_DIRS = ["up", "down", "left", "right"] as const;
 export type FocusDir = (typeof FOCUS_DIRS)[number];
+/** An override value meaning "this direction goes nowhere": focus stays where it is. Layer ids are Figma ids (`1:2`), so it never clashes with one. */
+export const FOCUS_NONE = "none";
 
 /**
  * `NodeOverlay.focus`: a node with a numeric `order` is focusable and joins the SWF's focus graph. Default moves: down/right = next in order,
@@ -50,7 +52,8 @@ export function focusGraph(nodes: Record<string, { focus?: unknown } | undefined
     const prev = order[(i - 1 + order.length) % order.length]!;
     const m: Record<FocusDir, string> = { up: prev, down: next, left: prev, right: next };
     for (const [k, t] of Object.entries(e.overrides)) {
-      if (!(FOCUS_DIRS as readonly string[]).includes(k)) {
+      if (t === FOCUS_NONE && (FOCUS_DIRS as readonly string[]).includes(k)) m[k as FocusDir] = FOCUS_NONE;
+      else if (!(FOCUS_DIRS as readonly string[]).includes(k)) {
         issues.push({ severity: "warning", code: "focus-direction-unknown", nodeId: e.id, message: `Override "${k}" is not a direction (up, down, left, right); it is ignored.` });
       } else if (typeof t !== "string" || !inGraph.has(t)) {
         issues.push({ severity: "error", code: "focus-target-missing", nodeId: e.id, message: `The ${k} override points to ${String(t)}, which is ${typeof t === "string" && exists(t) ? "not focusable (it has no focus order)" : "not a layer of this SWF"}.` });
@@ -66,7 +69,7 @@ export function focusGraph(nodes: Record<string, { focus?: unknown } | undefined
       return seen;
     };
     const first = order[0]!;
-    const fwd = walk(first, (id) => FOCUS_DIRS.map((d) => moves[id]![d]));
+    const fwd = walk(first, (id) => FOCUS_DIRS.map((d) => moves[id]![d]).filter((t) => t !== FOCUS_NONE));
     const back = walk(first, (id) => order.filter((o) => FOCUS_DIRS.some((d) => moves[o]![d] === id)));
     for (const id of order) {
       if (!fwd.has(id)) issues.push({ severity: "error", code: "focus-unreachable", nodeId: id, message: "No path of up/down/left/right moves leads here from the first focusable component; a gamepad can never focus it." });

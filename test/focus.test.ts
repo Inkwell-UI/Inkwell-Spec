@@ -16,6 +16,12 @@ describe("focus graph (W3)", () => {
     expect(g.moves["a"]!.down).toBe("c");
     expect(g.moves["a"]!.right).toBe("b");
   });
+  it("an override of none keeps a direction where it is, and a node reached only through it is unreachable", () => {
+    const g = focusGraph({ a: { focus: { order: 1, overrides: { down: "none", right: "none", up: "none", left: "none" } } }, b: { focus: { order: 2 } } }, all);
+    expect(g.moves["a"]).toEqual({ up: "none", down: "none", left: "none", right: "none" });
+    expect(codes(g)).toEqual(["focus-unreachable:b"]);
+    expect(codes(focusGraph({ a: { focus: { order: 1 } }, b: { focus: { order: 2, overrides: { up: "none" } } } }, all))).toEqual([]);
+  });
   it("reports missing targets, unknown directions and ignores deleted layers", () => {
     const g = focusGraph({ a: { focus: { order: 1, overrides: { up: "gone", left: "z", diag: "a" } } }, z: {}, old: { focus: { order: 0 } } }, (id) => id !== "gone" && id !== "old");
     expect(codes(g)).toEqual(["focus-node-missing:old", "focus-target-missing:a", "focus-target-missing:a", "focus-direction-unknown:a"]);
