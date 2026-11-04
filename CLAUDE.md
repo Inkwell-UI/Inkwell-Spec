@@ -36,3 +36,15 @@ Contract data: `contracts/<menu>/<layer>.json` (layers `engine`, `skyui52`, `sky
 - **Breaking changes need a compatibility note** listing which consumer versions speak which spec version.
 
 **Status (0.5, 2026-10-28):** `SPEC_VERSION` 8, Figma protocol 5, runtime protocol 1. Added in 0.5: `target.layers` (migration 7->8), contracts (`contracts/<menu>/<layer>.json`, `mergeContract`, `checkContract`), the packs lockfile and index (`PacksLock`, `PackIndex`, `packAssetUrl`), the focus graph and prompt overlay fields (no version bump), `NodeDef.contract`. **Spec v1 freeze** (from 1.0): menu JSON and `menu.json`, the mod INI, the pack manifest, node definitions, graph files, `packs.lock`, the pack index entry and contract layer files change only with a migration, a note in `docs/compatibility.md` and a fixture test; the IR, both protocols, the overlay and `project.json` stay free. Schemas in `schemas/` are generated (`yarn gen:schemas`) and checked by a test.
+
+## Agent logging (required for all agents and subagents, any model)
+Log your work in `d:\Mods\Inkwell\agents-logs\YYYY-MM-DD.md` (today's date).
+1. Log one entry per user request, including short follow-ups ("try this fix", "yes do it"). Write it before your first edit for that request, not after. Only log when you actually write something (files, code, config); if the request is research only, don't log. Before writing, open today's log; if it doesn't exist, create it with the heading `# Agent log — YYYY-MM-DD`.
+2. Append (never edit or delete) one entry:
+   ```
+   ## HH:MM · agent|subagent (model-id)[, spawned by agent HH:MM]
+   - **User request:** one-line summary
+   - **Doing:** one or two lines on how you're fulfilling it
+   ```
+3. Say `subagent` if another agent spawned you automatically, otherwise `agent`.
+4. The entry may be written by a haiku model.
