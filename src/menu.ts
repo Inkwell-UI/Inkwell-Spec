@@ -133,6 +133,9 @@ export const MenuSettings = z.looseObject({
   depth: Depth,
   triggers: Triggers.default(() => Triggers.parse({})),
   userDefaults: UserDefaults.optional(),
+  // Editor build choice, not in the deployed MenuDef: true = the SWF holds only the layers the default theme shows (a layer another theme shows is left out, so the INI Theme cannot switch it).
+  // Absent/false = such layers are compiled hidden and the INI Theme switches them. Additive (2026-11-05): older readers keep it as an unknown key.
+  stripThemeLayers: z.boolean().optional(),
   extra: Extra,
 });
 export type MenuSettings = z.infer<typeof MenuSettings>;

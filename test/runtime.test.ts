@@ -110,6 +110,12 @@ describe("MenuDef / MenuSettings", () => {
     expect(MenuSettings.safeParse({ ...s, userDefaults: { offsetX: 961 } }).success).toBe(false);
     expect(MenuSettings.safeParse({ ...s, swf: "x.swf" }).success).toBe(false);
   });
+  it("MenuSettings: stripThemeLayers is an optional boolean (a menu.json without it stays valid, an older reader keeps it as an unknown key)", () => {
+    const s = { specVersion: 8, flags: { pausesGame: true, cursor: true, modal: false, closeOnEscape: true }, depth: 3, triggers: { papyrus: false } };
+    expect(MenuSettings.parse(s)).not.toHaveProperty("stripThemeLayers");
+    expect(MenuSettings.parse({ ...s, stripThemeLayers: true })).toMatchObject({ stripThemeLayers: true });
+    expect(MenuSettings.safeParse({ ...s, stripThemeLayers: "yes" }).success).toBe(false);
+  });
 });
 
 describe("pack and overlay additions", () => {
@@ -119,6 +125,10 @@ describe("pack and overlay additions", () => {
     expect(NodeDef.safeParse({ ...d, requiresRuntime: "yes" }).success).toBe(false);
     const o = { role: "list", list: { itemTemplate: "1:2", spacing: 4, x: 1 } };
     expect(NodeOverlay.parse(o)).toEqual(o);
+    const s = { role: "scrollbar", scrollbar: { target: "1:3", orientation: "vertical", x: 1 } };
+    expect(NodeOverlay.parse(s)).toEqual(s);
+    expect(NodeOverlay.safeParse({ scrollbar: {} }).success).toBe(false); // target is required
+    expect(NodeOverlay.safeParse({ scrollbar: { target: "1:3", orientation: "diagonal" } }).success).toBe(false);
   });
 });
 

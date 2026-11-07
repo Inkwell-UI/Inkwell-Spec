@@ -128,3 +128,7 @@ From release 1.0 on, the formats people write, share or keep in their projects c
 ## Themes (SPEC-CHANGES V6, milestone 0.4)
 
 `Swf.themes` is a list of Figma variable collections (`Theme`: collection name, modes, variables keyed by variable id with a value per mode); the themes of a menu are the modes of the collection `themedCollection` picks. `SwfMeta.themes` carries them from the plugin; it is optional, so the protocol version stays 5 and an older editor ignores it. No spec version change: every field is optional.
+
+## `menu.json` `stripThemeLayers` (2026-11-05, additive)
+
+`MenuSettings` gains the optional boolean `stripThemeLayers` (editor build choice; not part of the deployed `MenuDef`, the INI or the runtime). Absent means false, so every existing `menu.json` reads and builds as before except that a layer which is hidden in the default theme but shown by another theme is now compiled hidden (it used to be left out); set `stripThemeLayers: true` to leave such layers out again. No migration and no `specVersion` change: the schema is loose, so an older editor keeps the key untouched. Fixture test: `test/runtime.test.ts`, "MenuSettings: stripThemeLayers".

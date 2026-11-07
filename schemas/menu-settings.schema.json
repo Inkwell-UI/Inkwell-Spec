@@ -112,6 +112,9 @@
       },
       "additionalProperties": {}
     },
+    "stripThemeLayers": {
+      "type": "boolean"
+    },
     "extra": {
       "type": "object",
       "propertyNames": {
