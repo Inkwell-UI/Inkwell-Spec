@@ -130,6 +130,15 @@
                           "additionalProperties": {}
                         }
                       },
+                      "modes": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      },
                       "layout": {
                         "type": "object",
                         "properties": {
@@ -787,6 +796,15 @@
                             "id"
                           ],
                           "additionalProperties": {}
+                        }
+                      },
+                      "modes": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "string"
                         }
                       },
                       "layout": {
@@ -1485,6 +1503,15 @@
                           "additionalProperties": {}
                         }
                       },
+                      "modes": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      },
                       "layout": {
                         "type": "object",
                         "properties": {
@@ -2020,6 +2047,15 @@
                           "additionalProperties": {}
                         }
                       },
+                      "modes": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      },
                       "layout": {
                         "type": "object",
                         "properties": {
@@ -2204,6 +2240,15 @@
                             "id"
                           ],
                           "additionalProperties": {}
+                        }
+                      },
+                      "modes": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "string"
                         }
                       },
                       "layout": {
@@ -2876,6 +2921,15 @@
                             "id"
                           ],
                           "additionalProperties": {}
+                        }
+                      },
+                      "modes": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "string"
                         }
                       },
                       "layout": {
