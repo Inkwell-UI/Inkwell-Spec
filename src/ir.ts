@@ -51,6 +51,8 @@ const base = {
   blend: z.string().optional(),
   mask: z.union([z.boolean(), NodeId]).optional(),
   bindings: z.record(z.string(), VariableRef).optional(),
+  // Figma "explicit variable modes" set on this layer (collection name -> mode name); the layer and its descendants keep that mode whatever theme is applied. Optional, no spec bump.
+  modes: z.record(z.string(), z.string()).optional(),
   // Auto layout (auto layout): how this node is sized along each axis (Figma layoutSizingHorizontal/Vertical) and whether its parent's auto layout skips it.
   // Absent = fixed on both axes and in the flow. `fill` only means something inside an auto layout; `hug` on a frame or text means it sizes to its content.
   layout: obj({
@@ -184,9 +186,11 @@ export type Theme = z.infer<typeof Theme>;
 
 /** `bindings` keys the toolchain understands (V6.2); any other key is kept and ignored. */
 export const THEME_BINDING_KEYS = [
-  "fills/N/color", "strokes/N/color", "opacity", "visible", "transform/width", "transform/height", "runs/0/fill/color", "runs/0/size",
+  "fills/N/color", "strokes/N/color", "fills/N/stops/M/color", "strokes/N/stops/M/color", "opacity", "visible", "transform/width", "transform/height", "runs/0/fill/color", "runs/0/size",
+  "content", "lineHeight", "letterSpacing", "strokes/N/weight", "strokes/N/side/top", "strokes/N/side/right", "strokes/N/side/bottom", "strokes/N/side/left",
+  "autoLayout/spacing", "autoLayout/padding/0", "autoLayout/padding/1", "autoLayout/padding/2", "autoLayout/padding/3",
 ] as const;
-export const isThemeBindingKey = (k: string): boolean => THEME_BINDING_KEYS.some((p) => k === p || (p.includes("/N/") && new RegExp(`^${p.replace("N", String.raw`\d+`)}$`).test(k)));
+export const isThemeBindingKey = (k: string): boolean => THEME_BINDING_KEYS.some((p) => k === p || (p.includes("/N/") && new RegExp(`^${p.replace("N", String.raw`\d+`).replace("M", String.raw`\d+`)}$`).test(k)));
 
 /** The collection that supplies the themes: the one named `preferred`, else the first with two or more modes. */
 export function themedCollection(themes: readonly Theme[] | undefined, preferred?: string): Theme | undefined {
