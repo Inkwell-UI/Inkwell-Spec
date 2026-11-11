@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "specVersion": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "assets": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{40}$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "l": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4096
+          },
+          "t": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4096
+          },
+          "r": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4096
+          },
+          "b": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4096
+          },
+          "w": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4096
+          },
+          "h": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4096
+          }
+        },
+        "required": [
+          "l",
+          "t",
+          "r",
+          "b",
+          "w",
+          "h"
+        ],
+        "additionalProperties": {}
+      }
+    }
+  },
+  "required": [
+    "specVersion",
+    "assets"
+  ],
+  "additionalProperties": {}
+}
